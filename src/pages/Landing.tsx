@@ -7,6 +7,7 @@ import { getSportIcon } from '../utilities/sportIcon';
 import { RootStackParamList } from '../navigator/RootNavigator';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { SearchBar } from '@rneui/themed';
+import { SharedElement } from 'react-navigation-shared-element';
 
 const sportsByAlphabetical = [...sports].sort((a, b) => {
   if (a.name > b.name) return 1;
@@ -37,7 +38,9 @@ const Landing = () => {
               })
             }
           >
-            <SportCard {...item} />
+            <SharedElement id={item.name}>
+              <SportCard {...item} />
+            </SharedElement>
           </TouchableOpacity>
         )}
       />
