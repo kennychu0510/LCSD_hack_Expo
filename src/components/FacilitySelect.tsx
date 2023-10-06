@@ -8,6 +8,7 @@ import { RootStackParamList } from '../navigator/RootNavigator';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Button, SearchBar } from '@rneui/themed';
 import { SharedElement } from 'react-navigation-shared-element';
+import { SCREEN_HEIGHT } from '../utilities/constants';
 
 const sportsByAlphabetical = [...sports].sort((a, b) => {
   if (a.name > b.name) return 1;
@@ -27,6 +28,7 @@ const FacilitySelect = (props: Props) => {
   const { setFacilities: setFacility, selectedFacilities, onReset } = props;
   const [searchValue, setSearchValue] = useState('');
   const sortedSports = sportsWithIcon.filter((sport) => sport.name.includes(searchValue));
+  const [offset,setOffset] = useState(0)
 
   return (
     <>
@@ -34,10 +36,13 @@ const FacilitySelect = (props: Props) => {
       <Button onPress={onReset} style={{ paddingHorizontal: 20, paddingBottom: 10, backgroundColor: '#FFF' }}>
         Reset
       </Button>
-
       <FlatList
+        onLayout={(e) => {
+          setOffset(e.nativeEvent.layout.y)
+        }}
         data={sortedSports}
         numColumns={3}
+        style={{height: SCREEN_HEIGHT - offset}}
         contentContainerStyle={{ padding: 5, paddingBottom: 130 }}
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => setFacility(item)}>

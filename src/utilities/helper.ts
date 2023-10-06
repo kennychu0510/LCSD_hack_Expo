@@ -104,3 +104,27 @@ export function htmlResultsBuilder(props: { html: string; date: string; details:
     return '';
   }
 }
+
+export function getAllVenues() {
+  const venueMap = new Map<string, Venue>();
+  for (let venue of VenueOptions) {
+    if (venueMap.has(venue.venueName)) {
+      continue;
+    }
+
+    venueMap.set(venue.venueName, venue);
+  }
+  const venueArray = Array.from(venueMap, ([key, value]) => ({
+    name: key,
+    value: value.venueValue,
+  })).sort((a, b) => {
+    if (a.name < b.name) return -1;
+    return 1;
+  });
+
+  return venueArray;
+}
+
+export function getVenueByValue(value: string): Venue | undefined {
+  return VenueOptions.find(item => item.venueValue === value)
+}

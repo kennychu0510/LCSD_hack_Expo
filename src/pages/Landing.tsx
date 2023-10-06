@@ -16,13 +16,10 @@ import moment from 'moment';
 import { WebView } from 'react-native-webview';
 import { LCSD_URL } from '../utilities/constants';
 import EnquiryWebview from '../components/EnquiryWebview';
-import { Venue, getVenue } from '../utilities/helper';
-
-const sportsByAlphabetical = [...sports].sort((a, b) => {
-  if (a.name > b.name) return 1;
-  if (a.name < b.name) return -1;
-  return 0;
-});
+import { Venue, getVenue, getVenueByValue } from '../utilities/helper';
+import VenueSelect from '../components/VenueSelect';
+import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const MaxDate = moment().add(7, 'd').toDate();
 const Today = new Date();
@@ -36,6 +33,8 @@ const Landing = () => {
   const navigation = useNavigation<LandingScreenNavigationProp>();
   const [facilityExpanded, setFacilityExpanded] = useState(false);
   const [dateExpanded, setDateExpanded] = useState(false);
+  const [venueExpanded, setVenueExpanded] = useState(false);
+  const [selectedVenue, setSelectedVenue] = useState('');
 
   function onSetFacilities(facility: ISport) {
     setSelectedFacility((facilities) => {
@@ -70,7 +69,7 @@ const Landing = () => {
       <ListItem.Accordion
         content={
           <>
-            <Ionicons name='time-outline' size={24} color='black' />
+            <MaterialIcons name="date-range" size={24} color="black" />
             <Text style={styles.tabLabel}>{selectedDate.toLocaleDateString()}</Text>
           </>
         }
@@ -90,7 +89,18 @@ const Landing = () => {
           />
         </View>
       </ListItem.Accordion>
-      
+      <ListItem.Accordion
+        content={
+          <>
+            <FontAwesome name="building-o" size={22} color="black" style={{marginLeft: 4}} />
+            <Text style={[styles.tabLabel, { color: selectedVenue ? '#000' : '#555' }]}>{getVenueByValue(selectedVenue)?.venueName ?? 'Select a Venue'}</Text>
+          </>
+        }
+        isExpanded={venueExpanded}
+        onPress={() => setVenueExpanded((state) => !state)}
+      >
+        <VenueSelect setVenue={setSelectedVenue} venue={selectedVenue} />
+      </ListItem.Accordion>
       <EnquiryWebview date={selectedDate} venue={venues} />
     </View>
   );
@@ -114,7 +124,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     padding: 15,
   },
-  
 });
 
 function getFacilityDisplayName(facilities: ISport[]): string {
