@@ -1,19 +1,19 @@
-import { Dimensions, Image, ImageProps, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import Animated from 'react-native-reanimated';
+import { Dimensions, Image, ImageProps, StyleSheet, Text, View } from 'react-native';
 
 const ITEM_WIDTH = (Dimensions.get('window').width - 5 * 2) / 3;
 
 export type SportCardProps = {
   name: string;
   icon: ImageProps;
+  selected?: boolean;
 };
 
 const SportCard = (props: SportCardProps) => {
-  const { name, icon } = props;
+  const { name, icon, selected } = props;
   return (
     <View style={styles.sportItemContainer}>
-      <View style={styles.sportCard}>
+      <View style={[styles.sportCard, selected && { borderWidth: 2 }]}>
         <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
           <Image source={icon} style={styles.icon} />
         </View>
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 50,
     height: 50,
+    aspectRatio: 1,
     resizeMode: 'contain',
   },
 });

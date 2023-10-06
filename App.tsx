@@ -5,12 +5,6 @@ import { ThemeProvider, createTheme } from '@rneui/themed';
 import 'react-native-gesture-handler';
 
 const theme = createTheme({
-  lightColors: {
-    primary: '#e7e7e8',
-  },
-  darkColors: {
-    primary: '#000',
-  },
   mode: 'light',
 });
 
