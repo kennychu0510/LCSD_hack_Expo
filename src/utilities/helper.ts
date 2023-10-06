@@ -1,10 +1,106 @@
 import VenueOptions from '../../assets/venueOptions.json';
-
+import { legendHTML } from './legend';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 export type Venue = Unpacked<typeof VenueOptions>;
 
-
 export function getVenue(sport: ISport): Venue | undefined {
-  return VenueOptions.find(item => item.sportValue === sport.value)
+  return VenueOptions.find((item) => item.sportValue === sport.value);
+}
+
+export function parseEnquiryDetail(venue: string): DropdownOption {
+  return JSON.parse(venue) as DropdownOption;
+}
+
+export function htmlResultsBuilder(props: { html: string; date: string; details: string }) {
+  const { html, date, details } = props;
+  try {
+    const parsedDetails = parseEnquiryDetail(details);
+    return /* HTML */ `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <title>Results</title>
+          <style>
+            #searchResultTable tr td:first-child {
+              display: none;
+            }
+
+            #searchResultTable {
+              width: auto !important;
+            }
+
+            td.resultTable-Header {
+              background-color: #e3e3e3;
+              border-right: 1px solid #ffffff;
+              border-bottom: 1px solid #ffffff;
+              text-align: center;
+              min-width: 80px;
+            }
+
+            TABLE.resultTable {
+              background-color: #f2f2f2;
+            }
+
+            TABLE.resultTable3 {
+              background-color: #f2f2f2;
+            }
+
+            TABLE.resultTable TD {
+              border-right: 1px solid #ffffff;
+              border-bottom: 1px solid #ffffff;
+              text-align: center;
+            }
+
+            div.timeslotCell {
+              text-align: center;
+              font-size: 1em;
+              vertical-align: middle;
+            }
+
+            .timeslotCellPeak {
+              text-align: center;
+              font-size: 1em;
+              background-color: #ffffcc;
+              vertical-align: middle;
+            }
+
+            .timeslotCellNonPeak {
+              text-align: center;
+              font-size: 1em;
+              background-color: #ccffcc;
+              vertical-align: middle;
+            }
+
+            .timeslotCellNotAvailable {
+              text-align: center;
+              font-size: 1em;
+              background-color: silver;
+              vertical-align: middle;
+            }
+
+            .timeslotTitle {
+              width: 40%;
+              float: left;
+              font-size: 1em;
+            }
+
+            .red {
+              color: 'red';
+            }
+          </style>
+        </head>
+        <body>
+          <h1>${parsedDetails.sportName}</h1>
+          <h2>${date}</h2>
+          ${html} ${legendHTML}
+        </body>
+      </html>
+    `;
+  } catch (error) {
+    console.log(error);
+    return '';
+  }
 }

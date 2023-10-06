@@ -24,7 +24,7 @@ const sportsByAlphabetical = [...sports].sort((a, b) => {
   return 0;
 });
 
-const MaxDate = moment().add(8, 'd').toDate();
+const MaxDate = moment().add(7, 'd').toDate();
 const Today = new Date();
 
 type LandingScreenNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -49,10 +49,6 @@ const Landing = () => {
 
   function onResetFacilities() {
     setSelectedFacility([]);
-  }
-
-  function onReload() {
-
   }
 
   const venues = selectedFacilities.map((item) => getVenue(item)).filter((item) => !!item) as Venue[];
@@ -94,12 +90,7 @@ const Landing = () => {
           />
         </View>
       </ListItem.Accordion>
-      <View style={styles.row}>
-        <Button onPress={onReload} color={'warning'}>
-          Reset
-        </Button>
-        <Button>Enquire</Button>
-      </View>
+      
       <EnquiryWebview date={selectedDate} venue={venues} />
     </View>
   );
@@ -123,6 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     padding: 15,
   },
+  
 });
 
 function getFacilityDisplayName(facilities: ISport[]): string {
