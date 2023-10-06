@@ -1,20 +1,27 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
-import { getAllVenues } from '../utilities/helper';
 import { SearchBar } from '@rneui/themed';
 import { Entypo } from '@expo/vector-icons';
 import { SCREEN_HEIGHT } from '../utilities/constants';
-const venues = getAllVenues();
+import VenueOptions from '../../assets/venueOptions.json';
+import _ from 'lodash';
 
 type Props = {
   setVenue: React.Dispatch<React.SetStateAction<string>>;
   venue: string;
+  facilities: ISport[];
 };
 
+const Venues = _.uniqBy(VenueOptions, 'venueValue');
+const SortedVenues = _.sortBy(Venues, ['venueName'])
+
 const VenueSelect = (props: Props) => {
-  const { setVenue, venue } = props;
+  const { setVenue, venue, facilities } = props;
   const [searchValue, setSearchValue] = useState('');
-  const filteredVenue = venues.filter((item) => item.name.includes(searchValue));
+
+  const filteredVenues = SortedVenues.filter((item) => item.venueName.includes(searchValue));
+  const facility = facilities.at(0);
+
   const [offset, setOffset] = useState(0);
 
   return (
@@ -25,11 +32,11 @@ const VenueSelect = (props: Props) => {
           setOffset(e.nativeEvent.layout.y);
         }}
         style={{ height: SCREEN_HEIGHT - offset }}
-        data={filteredVenue}
+        data={filteredVenues}
         renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.venueContainer} onPress={() => setVenue(item.value)}>
-            <Text style={[styles.venueName, venue === item.value && { color: 'green' }]}>{item.name}</Text>
-            {venue === item.value && <Entypo name='check' size={24} color='green' />}
+          <TouchableOpacity style={styles.venueContainer} onPress={() => setVenue(item.venueValue)}>
+            <Text style={[styles.venueName, venue === item.venueValue && { color: 'green' }]}>{item.venueName}</Text>
+            {venue === item.venueValue && <Entypo name='check' size={24} color='green' />}
           </TouchableOpacity>
         )}
       />

@@ -27,10 +27,9 @@ const Today = new Date();
 type LandingScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
 const Landing = () => {
-  const [selectedFacilities, setSelectedFacility] = useState<ISport[]>([]);
-  const [selectedDate, setSelectedDate] = useState(Today);
-
   const navigation = useNavigation<LandingScreenNavigationProp>();
+  const [selectedDate, setSelectedDate] = useState(Today);
+  const [selectedFacilities, setSelectedFacility] = useState<ISport[]>([]);
   const [facilityExpanded, setFacilityExpanded] = useState(false);
   const [dateExpanded, setDateExpanded] = useState(false);
   const [venueExpanded, setVenueExpanded] = useState(false);
@@ -99,7 +98,7 @@ const Landing = () => {
         isExpanded={venueExpanded}
         onPress={() => setVenueExpanded((state) => !state)}
       >
-        <VenueSelect setVenue={setSelectedVenue} venue={selectedVenue} />
+        <VenueSelect setVenue={setSelectedVenue} venue={selectedVenue} facilities={selectedFacilities} />
       </ListItem.Accordion>
       <EnquiryWebview date={selectedDate} venue={venues} />
     </View>
