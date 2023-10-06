@@ -2,11 +2,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import Landing from '../pages/Landing';
-import SportDetail from '../pages/SportDetail';
 import { SportCardProps } from '../components/SportCard';
-import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 
-const Stack = createSharedElementStackNavigator();
+const Stack = createStackNavigator();
 
 export type RootStackParamList = {
   Home: undefined;
@@ -23,13 +21,6 @@ const RootNavigator = () => {
         component={Landing}
         options={{
           headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name='Detail'
-        component={SportDetail}
-        sharedElements={(route) => {
-          return [route.params.sportCard.name];
         }}
       />
     </Stack.Navigator>

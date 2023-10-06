@@ -1,3 +1,4 @@
+import moment from 'moment';
 import VenueOptions from '../../assets/venueOptions.json';
 import { legendHTML } from './legend';
 
@@ -126,5 +127,21 @@ export function getAllVenues() {
 }
 
 export function getVenueByValue(value: string): Venue | undefined {
-  return VenueOptions.find(item => item.venueValue === value)
+  return VenueOptions.find((item) => item.venueValue === value);
+}
+
+export function getEnquiryOption(facility: ISport | null, venueValue: string): Venue | undefined {
+  if (!facility || !venueValue) return undefined;
+  return VenueOptions.find((item) => item.sportValue === facility.value && item.venueValue === venueValue);
+}
+
+export function parseEnquiryOptionForInject(option: Venue, date: Date): EnquiryInputOption {
+  return {
+    sport: Number(option.sportValue),
+    facility_type: Number(option.facilityTypeValue),
+    area: option.areaValue,
+    venue: Number(option.venueValue),
+    date: moment(date).format('YYYYMMDD'),
+    venueName: option.venueName,
+  };
 }

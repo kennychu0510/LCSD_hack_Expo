@@ -1,25 +1,18 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View, Image, Text } from 'react-native';
-import sports from '../../assets/sports.json';
-import SportCard from '../components/SportCard';
-import { getSportIcon } from '../utilities/sportIcon';
-import { RootStackParamList } from '../navigator/RootNavigator';
-import type { StackNavigationProp } from '@react-navigation/stack';
-import { Button, ListItem, SearchBar } from '@rneui/themed';
-import { SharedElement } from 'react-navigation-shared-element';
-import sportIcons from '../../assets/sportIcons';
-import FacilitySelect from '../components/FacilitySelect';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useNavigation } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import { ListItem } from '@rneui/themed';
 import moment from 'moment';
-import { WebView } from 'react-native-webview';
-import { LCSD_URL } from '../utilities/constants';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import sportIcons from '../../assets/sportIcons';
 import EnquiryWebview from '../components/EnquiryWebview';
-import { Venue, getVenue, getVenueByValue } from '../utilities/helper';
+import FacilitySelect from '../components/FacilitySelect';
 import VenueSelect from '../components/VenueSelect';
-import { FontAwesome } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { RootStackParamList } from '../navigator/RootNavigator';
+import { Venue, getEnquiryOption, getVenue, getVenueByValue } from '../utilities/helper';
+import { getSportIcon } from '../utilities/sportIcon';
 
 const MaxDate = moment().add(7, 'd').toDate();
 const Today = new Date();
@@ -29,46 +22,45 @@ type LandingScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 const Landing = () => {
   const navigation = useNavigation<LandingScreenNavigationProp>();
   const [selectedDate, setSelectedDate] = useState(Today);
-  const [selectedFacilities, setSelectedFacility] = useState<ISport[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState<ISport | null>(null);
   const [facilityExpanded, setFacilityExpanded] = useState(false);
   const [dateExpanded, setDateExpanded] = useState(false);
   const [venueExpanded, setVenueExpanded] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState('');
 
-  function onSetFacilities(facility: ISport) {
-    setSelectedFacility((facilities) => {
-      if (facilities?.find((item) => item.value === facility.value)) {
-        return facilities.filter((item) => item.value !== facility.value);
-      } else {
-        return [...facilities, facility];
-      }
-    });
-  }
-
   function onResetFacilities() {
-    setSelectedFacility([]);
+    setSelectedFacility(null);
   }
 
-  const venues = selectedFacilities.map((item) => getVenue(item)).filter((item) => !!item) as Venue[];
+  function onSetFacility(facility: ISport) {
+    setSelectedFacility(facility);
+    setFacilityExpanded(false);
+  }
 
+  function onSetVenue(venue: string) {
+    setSelectedVenue(venue)
+    setVenueExpanded(false)
+  }
+
+  const enquiryOption = getEnquiryOption(selectedFacility, selectedVenue)
   return (
     <View style={styles.container}>
       <ListItem.Accordion
         content={
           <>
-            <Image source={sportIcons.lcsd_logo} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
-            <Text style={[styles.tabLabel, { color: selectedFacilities ? '#000' : '#555' }]}>{getFacilityDisplayName(selectedFacilities)}</Text>
+            <Image source={selectedFacility ? getSportIcon(selectedFacility.name) : sportIcons.lcsd_logo} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
+            <Text style={[styles.tabLabel, { color: selectedFacility ? '#000' : '#555' }]}>{selectedFacility?.name ?? 'Select a Facility'}</Text>
           </>
         }
         isExpanded={facilityExpanded}
         onPress={() => setFacilityExpanded((state) => !state)}
       >
-        <FacilitySelect setFacilities={onSetFacilities} selectedFacilities={selectedFacilities} onReset={onResetFacilities} />
+        <FacilitySelect setFacilities={onSetFacility} selectedFacility={selectedFacility} onReset={onResetFacilities} />
       </ListItem.Accordion>
       <ListItem.Accordion
         content={
           <>
-            <MaterialIcons name="date-range" size={24} color="black" />
+            <MaterialIcons name='date-range' size={24} color='black' />
             <Text style={styles.tabLabel}>{selectedDate.toLocaleDateString()}</Text>
           </>
         }
@@ -91,16 +83,16 @@ const Landing = () => {
       <ListItem.Accordion
         content={
           <>
-            <FontAwesome name="building-o" size={22} color="black" style={{marginLeft: 4}} />
+            <FontAwesome name='building-o' size={22} color='black' style={{ marginLeft: 4 }} />
             <Text style={[styles.tabLabel, { color: selectedVenue ? '#000' : '#555' }]}>{getVenueByValue(selectedVenue)?.venueName ?? 'Select a Venue'}</Text>
           </>
         }
         isExpanded={venueExpanded}
         onPress={() => setVenueExpanded((state) => !state)}
       >
-        <VenueSelect setVenue={setSelectedVenue} venue={selectedVenue} facilities={selectedFacilities} />
+        <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
       </ListItem.Accordion>
-      <EnquiryWebview date={selectedDate} venue={venues} />
+      <EnquiryWebview date={selectedDate} enquiryOption={enquiryOption} />
     </View>
   );
 };

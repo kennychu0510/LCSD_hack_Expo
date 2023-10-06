@@ -1,26 +1,25 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
-import { SearchBar } from '@rneui/themed';
 import { Entypo } from '@expo/vector-icons';
-import { SCREEN_HEIGHT } from '../utilities/constants';
-import VenueOptions from '../../assets/venueOptions.json';
+import { SearchBar, Tab } from '@rneui/themed';
 import _ from 'lodash';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import VenueOptions from '../../assets/venueOptions.json';
+import { SCREEN_HEIGHT } from '../utilities/constants';
 
 type Props = {
-  setVenue: React.Dispatch<React.SetStateAction<string>>;
+  setVenue: (venue: string) => void;
   venue: string;
-  facilities: ISport[];
+  facility: ISport | null;
 };
 
-const Venues = _.uniqBy(VenueOptions, 'venueValue');
-const SortedVenues = _.sortBy(Venues, ['venueName']);
+const SortedVenues = _.sortBy(VenueOptions, ['venueName']);
 
 const VenueSelect = (props: Props) => {
-  const { setVenue, venue, facilities } = props;
-  const [searchValue, setSearchValue] = useState('');
+  const { setVenue, venue, facility } = props;
+  const [searchValue, setSearchValue] = useState(''); 
 
-  const facility = facilities.at(0);
-  const filteredVenues = SortedVenues.filter((item) => item.venueName.includes(searchValue)).filter((venue) => venue.facilityTypeName.includes(facility?.name ?? ''));
+  let filteredVenues = SortedVenues.filter((venue) => venue.sportValue === facility?.value).filter((item) => item.venueName.includes(searchValue));
+  const uniqueVenues = _.uniqBy(filteredVenues, 'venueValue');
 
   const [offset, setOffset] = useState(0);
 
@@ -30,11 +29,10 @@ const VenueSelect = (props: Props) => {
       <FlatList
         onLayout={(e) => {
           setOffset(e.nativeEvent.layout.y);
-          console.log(e.nativeEvent.layout.y)
         }}
         style={{ height: SCREEN_HEIGHT - offset - 75 }}
         contentContainerStyle={{ paddingBottom: offset + 75 + 10 }}
-        data={filteredVenues}
+        data={uniqueVenues}
         renderItem={({ item, index }) => (
           <TouchableOpacity style={styles.venueContainer} onPress={() => setVenue(item.venueValue)}>
             <Text style={[styles.venueName, venue === item.venueValue && { color: 'green' }]}>{item.venueName}</Text>
@@ -59,4 +57,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     flexShrink: 1,
   },
+  tabContainer: {},
 });

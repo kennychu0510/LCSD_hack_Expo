@@ -1,6 +1,6 @@
-import { SCRIPT_FUNCTIONS } from "./common";
+import { SCRIPT_FUNCTIONS } from './common';
 
-export const setDropdown = (options: EnquiryInputOption[]) => {
+export const setDropdown = (options: EnquiryInputOption) => {
   const optionsJSON = JSON.stringify(options);
   return /* js */ `
     (()=>{
@@ -37,56 +37,54 @@ export const setDropdown = (options: EnquiryInputOption[]) => {
           area panel -> preference panel
           */
           const optionsJSON = ${optionsJSON};
-          const options = optionsJSON;
-          for (let option of options) {
-            const { sport, facility_type, area, venue, date, venueName } = option;
-            for (let session_time of sessionTimePanel.options) {
-              if (!session_time.value) continue;
-              await setElementValue(datePanel, date);
-              await setElementValue(facilityPanel, sport);
-              await waitForLoading(facilityTypePanel);
+          const { sport, facility_type, area, venue, date, venueName } = optionsJSON;
+          for (let session_time of sessionTimePanel.options) {
+            if (!session_time.value) continue;
+            await setElementValue(datePanel, date);
+            await setElementValue(facilityPanel, sport);
+            await waitForLoading(facilityTypePanel);
 
-              if (facilityTypePanel.options.length > 1) {
-                await setElementValue(facilityTypePanel, facility_type);
-              }
-
-              await waitForLoading(areaPanel);
-
-              await setElementValue(sessionTimePanel, session_time.value);
-
-              if (areaPanel.options.length > 1) {
-                await setElementValue(areaPanel, area);
-                await waitForLoading(venuePanel);
-              }
-
-              await sleep(100)
-
-              await setElementValue(venuePanel, venue);
-
-            for (let option of locationOptions) {
-              if (!option.value) continue;
-              await setElementValue(locationPanel, option.value);
-              
-              enquireButton.click();
-              await waitForChange(frame, 'page');
-              if (errorPanel.style.display === '') {
-                const query = session_time.innerHTML + ' ' + venueName + ' ' + option.innerHTML;
-                const message = '<div style="color:red;"> No available sessions for ' + query + ' </div><br>';
-                _consoleLog(message, 'results');
-                continue;
-              }
-              
-              const showBookingDetailsButton = await waitForElm('.gwt-HTML div', frame);
-              showBookingDetailsButton.click();
-              await waitForChange(resultsTable, 'results table');
-              const output = {
-                venue: venueName,
-                session: session_time.innerText,
-                schedule: resultsTable.outerHTML
-              }
-              _consoleLog(output, 'results');
+            if (facilityTypePanel.options.length > 1) {
+              await setElementValue(facilityTypePanel, facility_type);
             }
+
+            await waitForLoading(areaPanel);
+
+            await setElementValue(sessionTimePanel, session_time.value);
+
+            if (areaPanel.options.length > 1) {
+              await setElementValue(areaPanel, area);
+              await waitForLoading(venuePanel);
+            }
+
+            await sleep(100)
+
+            await setElementValue(venuePanel, venue);
+
+          for (let option of locationOptions) {
+            if (!option.value) continue;
+            await setElementValue(locationPanel, option.value);
+            
+            enquireButton.click();
+            await waitForChange(frame, 'page');
+            if (errorPanel.style.display === '') {
+              const query = session_time.innerHTML + ' ' + venueName + ' ' + option.innerHTML;
+              const message = '<div style="color:red;"> No available sessions for ' + query + ' </div><br>';
+              _consoleLog(message, 'results');
+              continue;
+            }
+            
+            const showBookingDetailsButton = await waitForElm('.gwt-HTML div', frame);
+            showBookingDetailsButton.click();
+            await waitForChange(resultsTable, 'results table');
+            const output = {
+              venue: venueName,
+              session: session_time.innerText,
+              schedule: resultsTable.outerHTML
+            }
+            _consoleLog(output, 'results');
           }
+          
         }
           _consoleLog('', 'done');
         } catch (error) {

@@ -4,18 +4,18 @@ import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import { LCSD_URL } from '../utilities/constants';
 import moment from 'moment';
 import { setDropdown } from '../injectedScripts/enquiry';
-import { Venue, htmlResultsBuilder } from '../utilities/helper';
+import { Venue, htmlResultsBuilder, parseEnquiryOptionForInject } from '../utilities/helper';
 import { SCROLL_SLIDER_TO_VIEW } from '../injectedScripts/scrollSliderToView';
 import { Button, ListItem, SearchBar } from '@rneui/themed';
 import Loading from './LoadingModal';
 
 type Props = {
-  venue: Venue[];
+  enquiryOption: Venue | undefined;
   date: Date;
 };
 
 const EnquiryWebview = (props: Props) => {
-  const { venue, date } = props;
+  const { enquiryOption, date } = props;
   const [results, setResults] = useState<string>('');
   const resultsRecord = useRef<any>({});
   const webviewRef = useRef<WebView>(null);
@@ -37,32 +37,12 @@ const EnquiryWebview = (props: Props) => {
 
     const web = webviewRef.current;
 
-    if (!venue) {
-      Alert.alert('Please Select Venue');
+    if (!enquiryOption) {
+      Alert.alert('Please Select a Venue');
       return;
     }
 
-    if (!date) {
-      Alert.alert('Please Select a Date');
-      return;
-    }
-
-    const selectedOptions = venue;
-
-    if (!selectedOptions) {
-      Alert.alert('Invalid Option');
-      return;
-    }
-
-    const parsedOptions: EnquiryInputOption[] = selectedOptions.map((item) => ({
-      sport: Number(item.sportValue),
-      facility_type: Number(item.facilityTypeValue),
-      area: item.areaValue,
-      venue: Number(item.venueValue),
-      date: moment(date).format('YYYYMMDD'),
-      venueName: item.venueName,
-    }));
-
+    const parsedOptions = parseEnquiryOptionForInject(enquiryOption, date);
     setLoading(true);
     web?.injectJavaScript(setDropdown(parsedOptions));
   }
@@ -114,7 +94,10 @@ const EnquiryWebview = (props: Props) => {
     }
   }
 
-  function onReload() {}
+  function onReload() {
+    setLoading(false);
+    setKey((key) => key + 1);
+  }
 
   return (
     <>
@@ -124,8 +107,19 @@ const EnquiryWebview = (props: Props) => {
         </Button>
         <Button onPress={onEnquire}>Enquire</Button>
       </View>
-      <View style={{flex: 1}}>
-        <WebView ref={webviewRef} style={{ flex: 1 }} source={{ uri: LCSD_URL.ENQUIRY }} onMessage={(event: WebViewMessageEvent) => handleOnMessage(event)} />
+      <View style={{ flex: 1 }}>
+        <WebView
+          key={key}
+          ref={webviewRef}
+          style={{ flex: 1 }}
+          source={{ uri: LCSD_URL.ENQUIRY }}
+          onMessage={(event: WebViewMessageEvent) => handleOnMessage(event)}
+          injectedJavaScript={SCROLL_SLIDER_TO_VIEW}
+          injectedJavaScriptForMainFrameOnly={true}
+          setSupportMultipleWindows={false}
+          originWhitelist={['*']}
+          javaScriptCanOpenWindowsAutomatically={true}
+        />
         {showResultsModal && (
           <Modal visible={showResultsModal} transparent={false} animationType='slide'>
             <SafeAreaView style={{ flex: 1 }}>
@@ -133,19 +127,13 @@ const EnquiryWebview = (props: Props) => {
                 <Button title='Close' onPress={() => setShowResultsModal(false)}></Button>
               </View>
               <WebView
-                key={key}
                 source={{
                   html: htmlResultsBuilder({
                     html: results,
                     date: moment(date).format('MMM DD YYYY (dddd)'),
-                    details: JSON.stringify(venue[0]),
+                    details: JSON.stringify(enquiryOption),
                   }),
                 }}
-                injectedJavaScript={SCROLL_SLIDER_TO_VIEW}
-                injectedJavaScriptForMainFrameOnly={true}
-                setSupportMultipleWindows={false}
-                originWhitelist={['*']}
-                javaScriptCanOpenWindowsAutomatically={true}
                 onMessage={(event: WebViewMessageEvent) => handleOnMessage(event)}
               />
             </SafeAreaView>
