@@ -43,7 +43,7 @@ const FacilitySelect = (props: Props) => {
         data={sortedSports}
         numColumns={3}
         style={{height: SCREEN_HEIGHT - offset}}
-        contentContainerStyle={{ padding: 5, paddingBottom: 130 }}
+        contentContainerStyle={{ padding: 5, paddingBottom: offset + 10 }}
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => setFacility(item)}>
             <SportCard {...item} selected={selectedFacilities.find((selected) => selected.value === item.value) !== undefined} />

@@ -13,25 +13,27 @@ type Props = {
 };
 
 const Venues = _.uniqBy(VenueOptions, 'venueValue');
-const SortedVenues = _.sortBy(Venues, ['venueName'])
+const SortedVenues = _.sortBy(Venues, ['venueName']);
 
 const VenueSelect = (props: Props) => {
   const { setVenue, venue, facilities } = props;
   const [searchValue, setSearchValue] = useState('');
 
-  const filteredVenues = SortedVenues.filter((item) => item.venueName.includes(searchValue));
   const facility = facilities.at(0);
+  const filteredVenues = SortedVenues.filter((item) => item.venueName.includes(searchValue)).filter((venue) => venue.facilityTypeName.includes(facility?.name ?? ''));
 
   const [offset, setOffset] = useState(0);
 
   return (
-    <View>
+    <>
       <SearchBar value={searchValue} onChangeText={setSearchValue} platform='ios' containerStyle={{ paddingHorizontal: 10 }} placeholder='Venue' />
       <FlatList
         onLayout={(e) => {
           setOffset(e.nativeEvent.layout.y);
+          console.log(e.nativeEvent.layout.y)
         }}
-        style={{ height: SCREEN_HEIGHT - offset }}
+        style={{ height: SCREEN_HEIGHT - offset - 75 }}
+        contentContainerStyle={{ paddingBottom: offset + 75 + 10 }}
         data={filteredVenues}
         renderItem={({ item, index }) => (
           <TouchableOpacity style={styles.venueContainer} onPress={() => setVenue(item.venueValue)}>
@@ -40,7 +42,7 @@ const VenueSelect = (props: Props) => {
           </TouchableOpacity>
         )}
       />
-    </View>
+    </>
   );
 };
 
