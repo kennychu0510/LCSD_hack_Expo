@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import RootNavigator from './src/navigator/RootNavigator';
 import { ThemeProvider, createTheme } from '@rneui/themed';
@@ -12,6 +12,7 @@ const theme = createTheme({
 export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar barStyle={'dark-content'}/>
       <ThemeProvider theme={theme}>
         <RecoilRoot>
           <NavigationContainer>

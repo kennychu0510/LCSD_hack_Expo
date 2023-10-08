@@ -106,8 +106,8 @@ const EnquiryWebview = (props: Props) => {
           }
           break;
         case 'done':
-          Alert.alert('Booking Details Retrieved', undefined, [{ text: 'See Results', onPress: goToResults }]);
           setResultSchedule(currentEnquiry);
+          Alert.alert('Booking Details Retrieved', undefined, [{ text: 'See Results', onPress: goToResults }]);
           setLoading(false);
           break;
 
@@ -132,15 +132,6 @@ const EnquiryWebview = (props: Props) => {
     navigation.navigate('Results');
   }
 
-  function test() {
-    webviewRef.current?.injectJavaScript(/* js */`
-      (function() {
-        ${SCRIPT_FUNCTIONS}
-        _consoleLog('current path is ' + path)
-      })();
-    `)
-  }
-
   return (
     <>
       <View style={styles.row}>
@@ -148,7 +139,6 @@ const EnquiryWebview = (props: Props) => {
           Reload
         </Button>
         <Button onPress={onEnquire}>Enquire</Button>
-        <Button onPress={test}>test</Button>
       </View>
       <View style={{ flex: 1 }}>
         <WebView

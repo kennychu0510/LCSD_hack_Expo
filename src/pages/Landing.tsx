@@ -17,7 +17,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 const MaxDate = moment().add(7, 'd').toDate();
-const Today = new Date();
+const Today = getToday()
+
+function getToday() {
+  if (moment().get('hour') > 21) {
+    return moment().add(1, 'd').toDate()
+  }
+  return moment().toDate()
+}
 
 type LandingScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
