@@ -1,6 +1,7 @@
 import moment from 'moment';
 import VenueOptions from '../../assets/venueOptions.json';
 import { legendHTML } from './legend';
+import { USER_AGENT } from './constants';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 export type Venue = Unpacked<typeof VenueOptions>;
@@ -144,4 +145,9 @@ export function parseEnquiryOptionForInject(option: Venue, date: Date): EnquiryI
     date: moment(date).format('YYYYMMDD'),
     venueName: option.venueName,
   };
+}
+
+export function getUserAgent(): string {
+  const length = USER_AGENT.length;
+  return USER_AGENT[Math.floor(Math.random() * length)];
 }

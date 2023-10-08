@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { ListItem } from '@rneui/themed';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import sportIcons from '../../assets/sportIcons';
 import EnquiryWebview from '../components/EnquiryWebview';
@@ -27,6 +27,7 @@ const Landing = () => {
   const [dateExpanded, setDateExpanded] = useState(false);
   const [venueExpanded, setVenueExpanded] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState('');
+  const datePickerRef = useRef<typeof DateTimePicker>(null);
 
   function onResetFacilities() {
     setSelectedFacility(null);
@@ -38,13 +39,29 @@ const Landing = () => {
   }
 
   function onSetVenue(venue: string) {
-    setSelectedVenue(venue)
-    setVenueExpanded(false)
+    setSelectedVenue(venue);
+    setVenueExpanded(false);
   }
 
-  const enquiryOption = getEnquiryOption(selectedFacility, selectedVenue)
+
+  const enquiryOption = getEnquiryOption(selectedFacility, selectedVenue);
   return (
     <View style={styles.container}>
+      <View style={[styles.row, { paddingBottom: 5 }]}>
+        <View style={{ flexDirection: 'row' }}>
+          <MaterialIcons name='date-range' size={24} color='black' style={{ marginRight: 20 }} />
+          <Text style={{ fontSize: 20 }}>Date</Text>
+        </View>
+        <DateTimePicker
+          value={selectedDate}
+          maximumDate={MaxDate}
+          minimumDate={Today}
+          onChange={(_, date) => {
+            date && setSelectedDate(date);
+            setDateExpanded(false);
+          }}
+        />
+      </View>
       <ListItem.Accordion
         content={
           <>
@@ -57,29 +74,7 @@ const Landing = () => {
       >
         <FacilitySelect setFacilities={onSetFacility} selectedFacility={selectedFacility} onReset={onResetFacilities} />
       </ListItem.Accordion>
-      <ListItem.Accordion
-        content={
-          <>
-            <MaterialIcons name='date-range' size={24} color='black' />
-            <Text style={styles.tabLabel}>{selectedDate.toLocaleDateString()}</Text>
-          </>
-        }
-        isExpanded={dateExpanded}
-        onPress={() => setDateExpanded((state) => !state)}
-      >
-        <View style={styles.row}>
-          <Text style={{ fontSize: 20 }}>Date</Text>
-          <DateTimePicker
-            value={selectedDate}
-            maximumDate={MaxDate}
-            minimumDate={Today}
-            onChange={(_, date) => {
-              date && setSelectedDate(date);
-              setDateExpanded(false);
-            }}
-          />
-        </View>
-      </ListItem.Accordion>
+
       <ListItem.Accordion
         content={
           <>

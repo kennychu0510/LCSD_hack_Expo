@@ -4,7 +4,7 @@ import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import { LCSD_URL } from '../utilities/constants';
 import moment from 'moment';
 import { setDropdown } from '../injectedScripts/enquiry';
-import { Venue, htmlResultsBuilder, parseEnquiryOptionForInject } from '../utilities/helper';
+import { Venue, getUserAgent, htmlResultsBuilder, parseEnquiryOptionForInject } from '../utilities/helper';
 import { SCROLL_SLIDER_TO_VIEW } from '../injectedScripts/scrollSliderToView';
 import { Button, ListItem, SearchBar } from '@rneui/themed';
 import Loading from './LoadingModal';
@@ -78,7 +78,7 @@ const EnquiryWebview = (props: Props) => {
           }
           break;
         case 'done':
-          Alert.alert('Booking Details Retrieved', undefined, [{ text: 'See Results', onPress: () => {} }]);
+          Alert.alert('Booking Details Retrieved', undefined, [{ text: 'See Results', onPress: onViewResults }]);
           setLoading(false);
           break;
 
@@ -119,7 +119,12 @@ const EnquiryWebview = (props: Props) => {
           setSupportMultipleWindows={false}
           originWhitelist={['*']}
           javaScriptCanOpenWindowsAutomatically={true}
+          userAgent={getUserAgent()}
         />
+        <View style={{ alignItems: 'center', backgroundColor: '#FFF' }}>
+          <Button onPress={() => setShowResultsModal(true)}>Results</Button>
+        </View>
+
         {showResultsModal && (
           <Modal visible={showResultsModal} transparent={false} animationType='slide'>
             <SafeAreaView style={{ flex: 1 }}>
