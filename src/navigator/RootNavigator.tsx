@@ -2,15 +2,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import Landing from '../pages/Landing';
-import { SportCardProps } from '../components/SportCard';
+import Results from '../pages/Results';
 
 const Stack = createStackNavigator();
 
 export type RootStackParamList = {
   Home: undefined;
-  Detail: {
-    sportCard: SportCardProps;
-  };
+  Results: undefined;
 };
 
 const RootNavigator = () => {
@@ -22,6 +20,10 @@ const RootNavigator = () => {
         options={{
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name='Results'
+        component={Results}
       />
     </Stack.Navigator>
   );

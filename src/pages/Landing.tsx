@@ -13,6 +13,8 @@ import VenueSelect from '../components/VenueSelect';
 import { RootStackParamList } from '../navigator/RootNavigator';
 import { Venue, getEnquiryOption, getVenue, getVenueByValue } from '../utilities/helper';
 import { getSportIcon } from '../utilities/sportIcon';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 const MaxDate = moment().add(7, 'd').toDate();
 const Today = new Date();
@@ -24,10 +26,8 @@ const Landing = () => {
   const [selectedDate, setSelectedDate] = useState(Today);
   const [selectedFacility, setSelectedFacility] = useState<ISport | null>(null);
   const [facilityExpanded, setFacilityExpanded] = useState(false);
-  const [dateExpanded, setDateExpanded] = useState(false);
   const [venueExpanded, setVenueExpanded] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState('');
-  const datePickerRef = useRef<typeof DateTimePicker>(null);
 
   function onResetFacilities() {
     setSelectedFacility(null);
@@ -44,7 +44,7 @@ const Landing = () => {
   }
 
 
-  const enquiryOption = getEnquiryOption(selectedFacility, selectedVenue);
+  const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
   return (
     <View style={styles.container}>
       <View style={[styles.row, { paddingBottom: 5 }]}>
@@ -58,7 +58,6 @@ const Landing = () => {
           minimumDate={Today}
           onChange={(_, date) => {
             date && setSelectedDate(date);
-            setDateExpanded(false);
           }}
         />
       </View>
@@ -78,7 +77,7 @@ const Landing = () => {
       <ListItem.Accordion
         content={
           <>
-            <FontAwesome name='building-o' size={22} color='black' style={{ marginLeft: 4 }} />
+            <MaterialCommunityIcons name="office-building-marker-outline" size={24} color="black" />
             <Text style={[styles.tabLabel, { color: selectedVenue ? '#000' : '#555' }]}>{getVenueByValue(selectedVenue)?.venueName ?? 'Select a Venue'}</Text>
           </>
         }
@@ -87,7 +86,7 @@ const Landing = () => {
       >
         <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
       </ListItem.Accordion>
-      <EnquiryWebview date={selectedDate} enquiryOption={enquiryOption} />
+      <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} />
     </View>
   );
 };
