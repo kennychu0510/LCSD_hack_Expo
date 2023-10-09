@@ -29,9 +29,6 @@ const FacilitySelect = (props: Props) => {
   return (
     <>
       <SearchBar value={searchValue} onChangeText={setSearchValue} platform='ios' placeholder='Facility' containerStyle={{ paddingHorizontal: 10 }} />
-      <Button onPress={onReset} style={{ paddingHorizontal: 20, paddingBottom: 10, backgroundColor: '#FFF' }}>
-        Reset
-      </Button>
       <FlatList
         onLayout={(e) => {
           setOffset(e.nativeEvent.layout.y);

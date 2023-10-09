@@ -1,4 +1,4 @@
-import { Dimensions } from "react-native";
+import { Dimensions, Platform } from "react-native";
 
 export const LCSD_URL = {
   ENQUIRY: `https://w1.leisurelink.lcsd.gov.hk/leisurelink/application/checkCode.do?flowId=4&lang=EN`,
@@ -21,3 +21,6 @@ export const USER_AGENT = [
   'Mozilla/5.0 (iPhone12,1; U; CPU iPhone OS 13_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/15E148 Safari/602.1;'
 
 ];
+
+export const IS_ANDROID = Platform.OS === 'android'
+export const IS_IOS = Platform.OS === 'ios'

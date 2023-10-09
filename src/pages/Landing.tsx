@@ -14,16 +14,18 @@ import { RootStackParamList } from '../navigator/RootNavigator';
 import { Venue, getEnquiryOption, getVenue, getVenueByValue } from '../utilities/helper';
 import { getSportIcon } from '../utilities/sportIcon';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import { isIOS } from '@rneui/base';
+import { TouchableOpacity } from 'react-native';
+import { IS_ANDROID, IS_IOS } from '../utilities/constants';
 
 const MaxDate = moment().add(7, 'd').toDate();
-const Today = getToday()
+const Today = getToday();
 
 function getToday() {
   if (moment().get('hour') > 21) {
-    return moment().add(1, 'd').toDate()
+    return moment().add(1, 'd').toDate();
   }
-  return moment().toDate()
+  return moment().toDate();
 }
 
 type LandingScreenNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -35,6 +37,7 @@ const Landing = () => {
   const [facilityExpanded, setFacilityExpanded] = useState(false);
   const [venueExpanded, setVenueExpanded] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   function onResetFacilities() {
     setSelectedFacility(null);
@@ -50,24 +53,42 @@ const Landing = () => {
     setVenueExpanded(false);
   }
 
+  function onSetDate(date: Date) {
+    setSelectedDate(date);
+    setShowDatePicker(false);
+  }
 
   const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
   return (
     <View style={styles.container}>
-      <View style={[styles.row, { paddingBottom: 5 }]}>
+      <TouchableOpacity style={[styles.row, { paddingBottom: 5 }]} onPress={() => setShowDatePicker(true)}>
         <View style={{ flexDirection: 'row' }}>
           <MaterialIcons name='date-range' size={24} color='black' style={{ marginRight: 20 }} />
           <Text style={{ fontSize: 20 }}>Date</Text>
         </View>
-        <DateTimePicker
-          value={selectedDate}
-          maximumDate={MaxDate}
-          minimumDate={Today}
-          onChange={(_, date) => {
-            date && setSelectedDate(date);
-          }}
-        />
-      </View>
+        {IS_IOS ? (
+          <DateTimePicker
+            value={selectedDate}
+            maximumDate={MaxDate}
+            minimumDate={Today}
+            onChange={(_, date) => {
+              date && onSetDate(date);
+            }}
+          />
+        ) : (
+          showDatePicker && (
+            <DateTimePicker
+              value={selectedDate}
+              maximumDate={MaxDate}
+              minimumDate={Today}
+              onChange={(_, date) => {
+                date && onSetDate(date);
+              }}
+            />
+          )
+        )}
+        {IS_ANDROID && <Text style={{ fontSize: 20 }}>{selectedDate.toLocaleDateString()}</Text>}
+      </TouchableOpacity>
       <ListItem.Accordion
         content={
           <>
@@ -84,7 +105,7 @@ const Landing = () => {
       <ListItem.Accordion
         content={
           <>
-            <MaterialCommunityIcons name="office-building-marker-outline" size={24} color="black" />
+            <MaterialCommunityIcons name='office-building-marker-outline' size={24} color='black' />
             <Text style={[styles.tabLabel, { color: selectedVenue ? '#000' : '#555' }]}>{getVenueByValue(selectedVenue)?.venueName ?? 'Select a Venue'}</Text>
           </>
         }
