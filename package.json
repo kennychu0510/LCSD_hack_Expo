@@ -68,7 +68,8 @@
       "unused-imports/no-unused-vars": [
         "off",
         { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
-      ]
+      ],
+      "no-case-declarations": "off"
     }
   }
 }

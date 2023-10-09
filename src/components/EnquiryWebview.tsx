@@ -23,21 +23,12 @@ const EnquiryWebview = (props: Props) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { setEnquiry } = useEnquiryContext();
   const { enquiredVenue, date } = props;
-  const [results, setResults] = useState<string>('');
-  const resultsRecord = useRef<any>({});
   const webviewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(false);
   const [key, setKey] = useState(0);
   const [alertShown, setAlertShown] = useState(false);
 
-  function onClear() {
-    setResults('');
-    resultsRecord.current = {};
-  }
-
   function onEnquire() {
-    onClear();
-
     const web = webviewRef.current;
 
     if (!enquiredVenue) {
@@ -66,7 +57,7 @@ const EnquiryWebview = (props: Props) => {
           break;
         case 'results':
           const enquiryResults = data.message as any as ResultsFromEnquiry;
-          const { venue, schedule, session } = enquiryResults;
+          const { schedule } = enquiryResults;
           console.log({ schedule });
           const parsedSession = getSession(schedule);
           if (parsedSession) {
@@ -86,25 +77,6 @@ const EnquiryWebview = (props: Props) => {
                 venue: enquiredVenue!,
               };
             });
-          }
-          console.log(schedule);
-          if (!resultsRecord.current[venue]) {
-            setResults(
-              (results) =>
-                results +
-                `
-              <h1><u>${venue}</u></h1><h2>${session}</h2><div>${schedule}</div>
-            `
-            );
-            resultsRecord.current[venue] = true;
-          } else {
-            setResults(
-              (results) =>
-                results +
-                `
-              <h2>${session}</h2><div>${schedule}</div>
-            `
-            );
           }
           break;
         case 'done':
