@@ -3,6 +3,7 @@ import { SearchBar, Tab } from '@rneui/themed';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+
 import VenueOptions from '../../assets/venueOptions.json';
 import { SCREEN_HEIGHT } from '../utilities/constants';
 
@@ -18,9 +19,9 @@ const VenueSelect = (props: Props) => {
   const { setVenue, venue, facility } = props;
   const [searchValue, setSearchValue] = useState('');
 
-  let filteredVenues = SortedVenues.filter((venue) => venue.sportValue === facility?.value).filter(
-    (item) => item.venueName.includes(searchValue)
-  );
+  const filteredVenues = SortedVenues.filter(
+    (venue) => venue.sportValue === facility?.value
+  ).filter((item) => item.venueName.includes(searchValue));
   const uniqueVenues = _.uniqBy(filteredVenues, 'venueValue');
 
   const [offset, setOffset] = useState(0);

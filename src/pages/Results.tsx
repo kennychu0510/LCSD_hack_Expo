@@ -1,4 +1,4 @@
-import { Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Entypo, MaterialCommunityIcons, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import {
@@ -10,11 +10,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+
 import SportCard from '../components/SportCard';
 import useEnquiryContext from '../hooks/useEnquiryContext';
-import { getSportIcon } from '../utilities/sportIcon';
 import { ITimeSlot } from '../utilities/resultParser';
-import { AntDesign } from '@expo/vector-icons';
+import { getSportIcon } from '../utilities/sportIcon';
 const Results = () => {
   const enquiryResult = useEnquiryContext();
   const result = enquiryResult.enquiry;

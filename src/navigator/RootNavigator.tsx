@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { StyleSheet } from 'react-native';
+
 import Landing from '../pages/Landing';
 import Results from '../pages/Results';
 

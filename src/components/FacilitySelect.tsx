@@ -1,6 +1,7 @@
 import { Button, SearchBar } from '@rneui/themed';
 import React, { useState } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
+
 import sports from '../../assets/sports.json';
 import SportCard from '../components/SportCard';
 import { SCREEN_HEIGHT } from '../utilities/constants';

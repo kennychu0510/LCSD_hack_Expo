@@ -1,7 +1,8 @@
 import moment from 'moment';
-import VenueOptions from '../../assets/venueOptions.json';
-import { legendHTML } from './legend';
+
 import { USER_AGENT } from './constants';
+import { legendHTML } from './legend';
+import VenueOptions from '../../assets/venueOptions.json';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 export type Venue = Unpacked<typeof VenueOptions>;
@@ -109,7 +110,7 @@ export function htmlResultsBuilder(props: { html: string; date: string; details:
 
 export function getAllVenues() {
   const venueMap = new Map<string, Venue>();
-  for (let venue of VenueOptions) {
+  for (const venue of VenueOptions) {
     if (venueMap.has(venue.venueName)) {
       continue;
     }

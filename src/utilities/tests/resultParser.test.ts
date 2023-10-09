@@ -1,5 +1,6 @@
-import { getSession } from '../resultParser';
 import fs from 'fs';
+
+import { getSession } from '../resultParser';
 const sample1 = fs.readFileSync('src/sampleResults/sample1.html', { encoding: 'utf-8' });
 const sample2 = fs.readFileSync('src/sampleResults/sample2.html', { encoding: 'utf-8' });
 

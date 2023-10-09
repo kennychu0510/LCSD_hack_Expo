@@ -1,24 +1,26 @@
-import { Alert, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import React, { useRef, useState } from 'react';
-import WebView, { WebViewMessageEvent } from 'react-native-webview';
-import { LCSD_URL } from '../utilities/constants';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Button, ListItem, SearchBar } from '@rneui/themed';
 import moment from 'moment';
+import React, { useRef, useState } from 'react';
+import { Alert, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import WebView, { WebViewMessageEvent } from 'react-native-webview';
+
+import Loading from './LoadingModal';
+import useEnquiryContext, { Enquiry } from '../hooks/useEnquiryContext';
+import { SCRIPT_FUNCTIONS } from '../injectedScripts/common';
 import { setDropdown } from '../injectedScripts/enquiry';
+import { INITIAL_SCRIPT } from '../injectedScripts/initialScript';
+import { RootStackParamList } from '../navigator/RootNavigator';
+import { LCSD_URL } from '../utilities/constants';
 import {
   Venue,
   getUserAgent,
   htmlResultsBuilder,
   parseEnquiryOptionForInject,
 } from '../utilities/helper';
-import { INITIAL_SCRIPT } from '../injectedScripts/initialScript';
-import { Button, ListItem, SearchBar } from '@rneui/themed';
-import Loading from './LoadingModal';
+
 import { ISession, getSession } from '../utilities/resultParser';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigator/RootNavigator';
-import { SCRIPT_FUNCTIONS } from '../injectedScripts/common';
-import useEnquiryContext, { Enquiry } from '../hooks/useEnquiryContext';
 
 type Props = {
   enquiredVenue: Venue | undefined;
@@ -138,7 +140,7 @@ const EnquiryWebview = (props: Props) => {
   return (
     <>
       <View style={styles.row}>
-        <Button onPress={onReload} color={'warning'}>
+        <Button onPress={onReload} color="warning">
           Reload
         </Button>
         <Button onPress={onEnquire}>Enquire</Button>
@@ -154,7 +156,7 @@ const EnquiryWebview = (props: Props) => {
           injectedJavaScriptForMainFrameOnly={false}
           setSupportMultipleWindows={false}
           originWhitelist={['*']}
-          javaScriptCanOpenWindowsAutomatically={true}
+          javaScriptCanOpenWindowsAutomatically
           userAgent={getUserAgent()}
           onNavigationStateChange={(e) => {
             if (e.url.includes('/retry')) {

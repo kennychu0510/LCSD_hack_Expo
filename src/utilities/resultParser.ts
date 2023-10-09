@@ -25,7 +25,7 @@ export function getSession(input: string): ISession | null {
     const timeSlots: ITimeSlot[] = [];
 
     const timeSlotRow = $('#searchResultTable > table > tbody > tr:nth-child(1) .gwt-HTML');
-    for (let timeSlotCheerio of timeSlotRow) {
+    for (const timeSlotCheerio of timeSlotRow) {
       const timeSlotString = $(timeSlotCheerio).text();
       const [startString, endString] = timeSlotString.split('|');
       const start = parseTimeString(startString);
@@ -37,7 +37,7 @@ export function getSession(input: string): ISession | null {
     }
 
     const resultRows = $('#searchResultTable > table > tbody > tr').slice(2);
-    for (let row of resultRows) {
+    for (const row of resultRows) {
       const facilityName = $(row).children('td:nth-child(2)').text();
       const timeslotRows = $(row).children('td').slice(2);
 
