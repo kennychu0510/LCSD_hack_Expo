@@ -62,9 +62,8 @@ const Results = () => {
           ) : (
             <>
               <Text style={[styles.text, styles.bold, { marginTop: 10 }]}>Available Sessions</Text>
-              <Text>
-                Enquired at {result.enquiryTime.toLocaleDateString()}{' '}
-                {result.enquiryTime.toLocaleTimeString()}
+              <Text style={{textAlign: 'right'}}>
+                {moment(result.enquiryTime).fromNow()}
               </Text>
               <View style={styles.scheduleContainer}>
                 <View style={{ flexDirection: 'row' }}>
