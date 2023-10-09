@@ -158,9 +158,3 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 });
-
-function getFacilityDisplayName(facilities: ISport[]): string {
-  if (facilities.length === 0) return 'Select a Facility';
-  if (facilities.length === 1) return facilities.at(0)!.name;
-  return `${facilities.length} Facilities Selected`;
-}

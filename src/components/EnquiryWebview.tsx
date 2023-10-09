@@ -1,26 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, ListItem, SearchBar } from '@rneui/themed';
-import moment from 'moment';
+import { Button } from '@rneui/themed';
 import React, { useRef, useState } from 'react';
-import { Alert, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 
 import Loading from './LoadingModal';
-import useEnquiryContext, { Enquiry } from '../hooks/useEnquiryContext';
-import { SCRIPT_FUNCTIONS } from '../injectedScripts/common';
+import useEnquiryContext from '../hooks/useEnquiryContext';
 import { setDropdown } from '../injectedScripts/enquiry';
 import { INITIAL_SCRIPT } from '../injectedScripts/initialScript';
 import { RootStackParamList } from '../navigator/RootNavigator';
 import { LCSD_URL } from '../utilities/constants';
-import {
-  Venue,
-  getUserAgent,
-  htmlResultsBuilder,
-  parseEnquiryOptionForInject,
-} from '../utilities/helper';
-
-import { ISession, getSession } from '../utilities/resultParser';
+import { Venue, getUserAgent, parseEnquiryOptionForInject } from '../utilities/helper';
+import { getSession } from '../utilities/resultParser';
 
 type Props = {
   enquiredVenue: Venue | undefined;

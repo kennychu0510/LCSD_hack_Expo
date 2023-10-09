@@ -1,5 +1,5 @@
 import { Entypo } from '@expo/vector-icons';
-import { SearchBar, Tab } from '@rneui/themed';
+import { SearchBar } from '@rneui/themed';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
