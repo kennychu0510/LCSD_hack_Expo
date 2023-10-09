@@ -1,9 +1,10 @@
-import { Entypo, MaterialCommunityIcons, MaterialIcons, AntDesign } from '@expo/vector-icons';
+import { AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Modal,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,33 +12,47 @@ import {
   View,
 } from 'react-native';
 
+import moment from 'moment';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SportCard from '../components/SportCard';
 import useEnquiryContext from '../hooks/useEnquiryContext';
+import { SCREEN_HEIGHT } from '../utilities/constants';
 import { ITimeSlot } from '../utilities/resultParser';
 import { getSportIcon } from '../utilities/sportIcon';
-import moment from 'moment';
 const Results = () => {
   const enquiryResult = useEnquiryContext();
   const result = enquiryResult.enquiry;
   const [timeslotDetail, setTimeslotDetail] = useState<ITimeSlot | null>(null);
+  const insets = useSafeAreaInsets();
+  const timeslotScrollRef = useRef<ScrollView>(null);
+  const headerScrollRef = useRef<ScrollView>(null);
+  const headerRowRef = useRef<View>(null);
+  const [headerPageY, setHeaderPageY] = useState(SCREEN_HEIGHT);
+  const [showFixedHeader, setShowFixedHeader] = useState(false);
 
   if (!result) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={{color: '#444'}}>There are no previous records</Text>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: '#444' }}>There are no previous records</Text>
       </View>
-    )
-  };
+    );
+  }
 
   const timeslotGroupByFacility = Object.values(_.groupBy(result.timeSlots, 'facilityName'));
   const availableTimes = _.uniqBy(result.timeSlots, 'start');
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        scrollEventThrottle={1}
+        onScroll={(e) => {
+          const { y } = e.nativeEvent.contentOffset;
+          setShowFixedHeader(y > headerPageY - 3 * 30);
+        }}>
         <View style={{ alignSelf: 'center' }}>
           <SportCard icon={getSportIcon(result?.venue.sportName)} name={result.venue.sportName} />
         </View>
+
         <View style={styles.resultsContainer}>
           <View style={styles.row}>
             <MaterialIcons name="date-range" size={24} color="black" style={styles.icon} />
@@ -62,13 +77,17 @@ const Results = () => {
           ) : (
             <>
               <Text style={[styles.text, styles.bold, { marginTop: 10 }]}>Available Sessions</Text>
-              <Text style={{textAlign: 'right'}}>
-                {moment(result.enquiryTime).fromNow()}
-              </Text>
+              <Text style={{ textAlign: 'right' }}>{moment(result.enquiryTime).fromNow()}</Text>
               <View style={styles.scheduleContainer}>
-                <View style={{ flexDirection: 'row' }}>
+                <View
+                  style={{ flexDirection: 'row' }}
+                  onLayout={() => {
+                    headerRowRef.current?.measure((x, y, width, height, pageX, pageY) => {
+                      setHeaderPageY(pageY);
+                    });
+                  }}>
                   <View>
-                    <View style={styles.cell}>
+                    <View style={[styles.cell]} ref={headerRowRef}>
                       <Text style={{ textAlign: 'center' }}>No.</Text>
                     </View>
 
@@ -80,7 +99,15 @@ const Results = () => {
                       </View>
                     ))}
                   </View>
-                  <ScrollView horizontal bounces={false}>
+                  <ScrollView
+                    horizontal
+                    bounces={false}
+                    ref={timeslotScrollRef}
+                    scrollEventThrottle={16}
+                    onScroll={(e) => {
+                      const { x, y } = e.nativeEvent.contentOffset;
+                      headerScrollRef.current?.scrollTo({ x: x, y: 0, animated: false });
+                    }}>
                     <View style={{ flexDirection: 'row' }}>
                       {timeslotGroupByFacility.map((timeSlots) => (
                         <View key={getCourtNo(timeSlots.at(0)?.facilityName ?? '')}>
@@ -111,6 +138,28 @@ const Results = () => {
           )}
         </View>
       </ScrollView>
+      {showFixedHeader && (
+        <View
+          style={{
+            position: 'absolute',
+            top: insets.top,
+            flexDirection: 'row',
+            marginHorizontal: 15,
+            backgroundColor: '#FFF',
+          }}>
+          <View style={[styles.cell]}>
+            <Text style={{ textAlign: 'center' }}>No.</Text>
+          </View>
+          <ScrollView ref={headerScrollRef} showsHorizontalScrollIndicator={false} horizontal>
+            {timeslotGroupByFacility.map((item) => (
+              <View style={[styles.cell, styles.timeSlot]} key={item.at(0)?.facilityName}>
+                <Text>{getCourtNo(item.at(0)?.facilityName ?? '')}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
       <Modal visible={!!timeslotDetail} transparent statusBarTranslucent animationType="fade">
         <TouchableWithoutFeedback onPress={() => setTimeslotDetail(null)}>
           <View
@@ -166,7 +215,9 @@ const Results = () => {
                   </Text>
                 )}
               </View>
-              <Text style={{color: '#333', textAlign: 'right'}}>{moment(result.enquiryTime).fromNow()}</Text>
+              <Text style={{ color: '#333', textAlign: 'right' }}>
+                {moment(result.enquiryTime).fromNow()}
+              </Text>
             </View>
           </View>
         </TouchableWithoutFeedback>
