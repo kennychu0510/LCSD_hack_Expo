@@ -1,12 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { useMemo, useState } from 'react';
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import { Enquiry, EnquiryContext } from './src/hooks/useEnquiryContext';
 import RootNavigator from './src/navigator/RootNavigator';
 import enquiryResults from './sampleResults/enquiryResults.json';
 import moment from 'moment';
+import { StatusBar } from 'expo-status-bar';
+
 
 const enquiryResultsForDebug = {
   ...enquiryResults,
@@ -30,7 +32,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle={'dark-content'} />
+      <StatusBar style={'light'} />
       <ThemeProvider theme={theme}>
         <EnquiryContext.Provider value={contextValue}>
           <NavigationContainer>
