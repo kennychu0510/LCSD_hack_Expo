@@ -29,6 +29,7 @@ const EnquiryWebview = (props: Props) => {
   const webviewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(false);
   const [key, setKey] = useState(0);
+  const [alertShown, setAlertShown] = useState(false);
 
   function onClear() {
     setResults('');
@@ -67,7 +68,7 @@ const EnquiryWebview = (props: Props) => {
         case 'results':
           const enquiryResults = data.message as any as ResultsFromEnquiry;
           const { venue, schedule, session } = enquiryResults;
-          console.log({schedule})
+          console.log({ schedule });
           const parsedSession = getSession(schedule);
           if (parsedSession) {
             const { timeSlots } = parsedSession;
@@ -108,8 +109,8 @@ const EnquiryWebview = (props: Props) => {
           }
           break;
         case 'done':
-          Alert.alert('Booking Details Retrieved', undefined, [{ text: 'See Results', onPress: goToResults }]);
           setLoading(false);
+          navigation.navigate('Results');
           break;
 
         case 'error':
@@ -127,10 +128,6 @@ const EnquiryWebview = (props: Props) => {
   function onReload() {
     setLoading(false);
     setKey((key) => key + 1);
-  }
-
-  function goToResults() {
-    navigation.navigate('Results');
   }
 
   return (
@@ -154,11 +151,22 @@ const EnquiryWebview = (props: Props) => {
           originWhitelist={['*']}
           javaScriptCanOpenWindowsAutomatically={true}
           userAgent={getUserAgent()}
+          onNavigationStateChange={(e) => {
+            if (e.url.includes('/retry')) {
+              if (alertShown) return;
+              setAlertShown(true);
+              Alert.alert('Unable to enquiry', 'LCSD is currently unavailable', [
+                {
+                  text: 'Reload',
+                  onPress: onReload,
+                },
+                {
+                  text: 'Ok',
+                },
+              ]);
+            }
+          }}
         />
-        <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
-          <Button onPress={goToResults}>Results</Button>
-        </View>
-
         {loading && <Loading />}
       </View>
     </>

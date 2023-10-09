@@ -1,22 +1,20 @@
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import { ListItem } from '@rneui/themed';
+import { Button, ListItem } from '@rneui/themed';
 import moment from 'moment';
-import React, { useRef, useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import sportIcons from '../../assets/sportIcons';
 import EnquiryWebview from '../components/EnquiryWebview';
 import FacilitySelect from '../components/FacilitySelect';
 import VenueSelect from '../components/VenueSelect';
 import { RootStackParamList } from '../navigator/RootNavigator';
-import { Venue, getEnquiryOption, getVenue, getVenueByValue } from '../utilities/helper';
-import { getSportIcon } from '../utilities/sportIcon';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { isIOS } from '@rneui/base';
-import { TouchableOpacity } from 'react-native';
 import { IS_ANDROID, IS_IOS } from '../utilities/constants';
+import { getEnquiryOption, getVenueByValue } from '../utilities/helper';
+import { getSportIcon } from '../utilities/sportIcon';
+import useEnquiryContext from '../hooks/useEnquiryContext';
 
 const MaxDate = moment().add(7, 'd').toDate();
 const Today = getToday();
@@ -38,6 +36,7 @@ const Landing = () => {
   const [venueExpanded, setVenueExpanded] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const { enquiry } = useEnquiryContext();
 
   function onResetFacilities() {
     setSelectedFacility(null);
@@ -56,6 +55,10 @@ const Landing = () => {
   function onSetDate(date: Date) {
     setSelectedDate(date);
     setShowDatePicker(false);
+  }
+
+  function goToResults() {
+    navigation.navigate('Results');
   }
 
   const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
@@ -115,6 +118,11 @@ const Landing = () => {
         <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
       </ListItem.Accordion>
       <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} />
+      {!!enquiry && (
+        <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
+          <Button onPress={goToResults}>Results</Button>
+        </View>
+      )}
     </View>
   );
 };
