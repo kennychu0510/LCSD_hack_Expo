@@ -19,7 +19,7 @@ export function htmlResultsBuilder(props: { html: string; date: string; details:
   try {
     const parsedDetails = parseEnquiryDetail(details);
     return /* HTML */ `
-      <!DOCTYPE html>
+      <!doctype html>
       <html lang="en">
         <head>
           <meta charset="UTF-8" />
@@ -133,7 +133,9 @@ export function getVenueByValue(value: string): Venue | undefined {
 
 export function getEnquiryOption(facility: ISport | null, venueValue: string): Venue | undefined {
   if (!facility || !venueValue) return undefined;
-  return VenueOptions.find((item) => item.sportValue === facility.value && item.venueValue === venueValue);
+  return VenueOptions.find(
+    (item) => item.sportValue === facility.value && item.venueValue === venueValue
+  );
 }
 
 export function parseEnquiryOptionForInject(option: Venue, date: Date): EnquiryInputOption {

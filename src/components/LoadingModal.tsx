@@ -1,5 +1,5 @@
-import { ActivityIndicator, Button, Modal, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, Button, Modal, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
 
 const Loading = () => {
   return (
@@ -14,10 +14,10 @@ const Loading = () => {
         </View>
       )} */}
     </View>
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;
 
 const styles = StyleSheet.create({
   loadingScreen: {
@@ -27,4 +27,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.7)',
   },
-})
+});

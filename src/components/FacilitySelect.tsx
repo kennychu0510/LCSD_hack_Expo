@@ -12,7 +12,10 @@ const sportsByAlphabetical = [...sports].sort((a, b) => {
   return 0;
 });
 
-const sportsWithIcon = sportsByAlphabetical.map((item) => ({ ...item, icon: getSportIcon(item.name) }));
+const sportsWithIcon = sportsByAlphabetical.map((item) => ({
+  ...item,
+  icon: getSportIcon(item.name),
+}));
 
 type Props = {
   selectedFacility: ISport | null;
@@ -28,7 +31,13 @@ const FacilitySelect = (props: Props) => {
 
   return (
     <>
-      <SearchBar value={searchValue} onChangeText={setSearchValue} platform='ios' placeholder='Facility' containerStyle={{ paddingHorizontal: 10 }} />
+      <SearchBar
+        value={searchValue}
+        onChangeText={setSearchValue}
+        platform="ios"
+        placeholder="Facility"
+        containerStyle={{ paddingHorizontal: 10 }}
+      />
       <FlatList
         onLayout={(e) => {
           setOffset(e.nativeEvent.layout.y);

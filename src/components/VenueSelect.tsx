@@ -16,16 +16,24 @@ const SortedVenues = _.sortBy(VenueOptions, ['venueName']);
 
 const VenueSelect = (props: Props) => {
   const { setVenue, venue, facility } = props;
-  const [searchValue, setSearchValue] = useState(''); 
+  const [searchValue, setSearchValue] = useState('');
 
-  let filteredVenues = SortedVenues.filter((venue) => venue.sportValue === facility?.value).filter((item) => item.venueName.includes(searchValue));
+  let filteredVenues = SortedVenues.filter((venue) => venue.sportValue === facility?.value).filter(
+    (item) => item.venueName.includes(searchValue)
+  );
   const uniqueVenues = _.uniqBy(filteredVenues, 'venueValue');
 
   const [offset, setOffset] = useState(0);
 
   return (
     <>
-      <SearchBar value={searchValue} onChangeText={setSearchValue} platform='ios' containerStyle={{ paddingHorizontal: 10 }} placeholder='Venue' />
+      <SearchBar
+        value={searchValue}
+        onChangeText={setSearchValue}
+        platform="ios"
+        containerStyle={{ paddingHorizontal: 10 }}
+        placeholder="Venue"
+      />
       <FlatList
         onLayout={(e) => {
           setOffset(e.nativeEvent.layout.y);
@@ -35,8 +43,10 @@ const VenueSelect = (props: Props) => {
         data={uniqueVenues}
         renderItem={({ item, index }) => (
           <TouchableOpacity style={styles.venueContainer} onPress={() => setVenue(item.venueValue)}>
-            <Text style={[styles.venueName, venue === item.venueValue && { color: 'green' }]}>{item.venueName}</Text>
-            {venue === item.venueValue && <Entypo name='check' size={24} color='green' />}
+            <Text style={[styles.venueName, venue === item.venueValue && { color: 'green' }]}>
+              {item.venueName}
+            </Text>
+            {venue === item.venueValue && <Entypo name="check" size={24} color="green" />}
           </TouchableOpacity>
         )}
       />

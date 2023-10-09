@@ -4,7 +4,12 @@ import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import { LCSD_URL } from '../utilities/constants';
 import moment from 'moment';
 import { setDropdown } from '../injectedScripts/enquiry';
-import { Venue, getUserAgent, htmlResultsBuilder, parseEnquiryOptionForInject } from '../utilities/helper';
+import {
+  Venue,
+  getUserAgent,
+  htmlResultsBuilder,
+  parseEnquiryOptionForInject,
+} from '../utilities/helper';
 import { INITIAL_SCRIPT } from '../injectedScripts/initialScript';
 import { Button, ListItem, SearchBar } from '@rneui/themed';
 import Loading from './LoadingModal';

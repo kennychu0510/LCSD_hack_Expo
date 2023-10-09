@@ -1,7 +1,7 @@
 type ISport = {
   value: string;
   name: string;
-}
+};
 
 type Data = {
   type: string;
@@ -9,10 +9,10 @@ type Data = {
 };
 
 type ResultsFromEnquiry = {
-  venue: string,
-  session: string,
-  schedule: string
-}
+  venue: string;
+  session: string;
+  schedule: string;
+};
 
 type ResultsFromAuthPage = {
   original: string;
@@ -42,4 +42,3 @@ type EnquiryInputOption = {
   date: string;
   venueName: string;
 };
-

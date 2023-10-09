@@ -15,16 +15,13 @@ const RootNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name='Home'
+        name="Home"
         component={Landing}
         options={{
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name='Results'
-        component={Results}
-      />
+      <Stack.Screen name="Results" component={Results} />
     </Stack.Navigator>
   );
 };

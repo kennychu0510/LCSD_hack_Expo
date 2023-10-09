@@ -64,9 +64,11 @@ const Landing = () => {
   const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={[styles.row, { paddingBottom: 5 }]} onPress={() => setShowDatePicker(true)}>
+      <TouchableOpacity
+        style={[styles.row, { paddingBottom: 5 }]}
+        onPress={() => setShowDatePicker(true)}>
         <View style={{ flexDirection: 'row' }}>
-          <MaterialIcons name='date-range' size={24} color='black' style={{ marginRight: 20 }} />
+          <MaterialIcons name="date-range" size={24} color="black" style={{ marginRight: 20 }} />
           <Text style={{ fontSize: 20 }}>Date</Text>
         </View>
         {IS_IOS ? (
@@ -95,26 +97,35 @@ const Landing = () => {
       <ListItem.Accordion
         content={
           <>
-            <Image source={selectedFacility ? getSportIcon(selectedFacility.name) : sportIcons.lcsd_logo} style={{ width: 24, height: 24, resizeMode: 'contain' }} />
-            <Text style={[styles.tabLabel, { color: selectedFacility ? '#000' : '#555' }]}>{selectedFacility?.name ?? 'Select a Facility'}</Text>
+            <Image
+              source={selectedFacility ? getSportIcon(selectedFacility.name) : sportIcons.lcsd_logo}
+              style={{ width: 24, height: 24, resizeMode: 'contain' }}
+            />
+            <Text style={[styles.tabLabel, { color: selectedFacility ? '#000' : '#555' }]}>
+              {selectedFacility?.name ?? 'Select a Facility'}
+            </Text>
           </>
         }
         isExpanded={facilityExpanded}
-        onPress={() => setFacilityExpanded((state) => !state)}
-      >
-        <FacilitySelect setFacilities={onSetFacility} selectedFacility={selectedFacility} onReset={onResetFacilities} />
+        onPress={() => setFacilityExpanded((state) => !state)}>
+        <FacilitySelect
+          setFacilities={onSetFacility}
+          selectedFacility={selectedFacility}
+          onReset={onResetFacilities}
+        />
       </ListItem.Accordion>
 
       <ListItem.Accordion
         content={
           <>
-            <MaterialCommunityIcons name='office-building-marker-outline' size={24} color='black' />
-            <Text style={[styles.tabLabel, { color: selectedVenue ? '#000' : '#555' }]}>{getVenueByValue(selectedVenue)?.venueName ?? 'Select a Venue'}</Text>
+            <MaterialCommunityIcons name="office-building-marker-outline" size={24} color="black" />
+            <Text style={[styles.tabLabel, { color: selectedVenue ? '#000' : '#555' }]}>
+              {getVenueByValue(selectedVenue)?.venueName ?? 'Select a Venue'}
+            </Text>
           </>
         }
         isExpanded={venueExpanded}
-        onPress={() => setVenueExpanded((state) => !state)}
-      >
+        onPress={() => setVenueExpanded((state) => !state)}>
         <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
       </ListItem.Accordion>
       <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} />

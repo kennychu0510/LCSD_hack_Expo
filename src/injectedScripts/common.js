@@ -1,4 +1,4 @@
-export const SCRIPT_FUNCTIONS = /* js */`
+export const SCRIPT_FUNCTIONS = /* js */ `
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -104,4 +104,4 @@ function waitForDropdownOptions(target) {
   })
 }
 const path = window.location.pathname
-`
+`;

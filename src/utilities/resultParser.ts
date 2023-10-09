@@ -2,7 +2,7 @@ import { load } from 'cheerio';
 
 export enum Status {
   AVAILABLE = 'A',
-  UNAVAILABLE = 'U'
+  UNAVAILABLE = 'U',
 }
 
 export type ITimeSlot = {
@@ -23,7 +23,7 @@ export function getSession(input: string): ISession | null {
     const venue = $('tr:nth-child(2) > td.resultTable-Header2').text();
     const availableTimeSlots: Omit<ITimeSlot, 'facilityName' | 'status'>[] = [];
     const timeSlots: ITimeSlot[] = [];
-  
+
     const timeSlotRow = $('#searchResultTable > table > tbody > tr:nth-child(1) .gwt-HTML');
     for (let timeSlotCheerio of timeSlotRow) {
       const timeSlotString = $(timeSlotCheerio).text();
@@ -35,12 +35,12 @@ export function getSession(input: string): ISession | null {
         end,
       });
     }
-  
+
     const resultRows = $('#searchResultTable > table > tbody > tr').slice(2);
     for (let row of resultRows) {
       const facilityName = $(row).children('td:nth-child(2)').text();
       const timeslotRows = $(row).children('td').slice(2);
-  
+
       for (let i = 0; i < timeslotRows.length; i++) {
         const timeslotRow = timeslotRows[i];
         const status = $(timeslotRow).text();
@@ -52,25 +52,24 @@ export function getSession(input: string): ISession | null {
         timeSlots.push(timeSlotData);
       }
     }
-  
+
     return {
       venue,
       timeSlots,
     };
-    
   } catch (error) {
-    console.log(error)
-    return null
+    console.log(error);
+    return null;
   }
 }
 
 function parseTimeString(time: string): string {
-  return (time.trim().replace(':', ''));
+  return time.trim().replace(':', '');
 }
 
 function getStatus(input: string): Status {
   if (input.trim().length > 0) {
-    return Status.UNAVAILABLE
+    return Status.UNAVAILABLE;
   }
-  return Status.AVAILABLE
+  return Status.AVAILABLE;
 }
