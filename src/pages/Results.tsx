@@ -38,43 +38,50 @@ const Results = () => {
             <Text style={[styles.text, { textAlign: 'right' }]}>{result.venue.address}</Text>
           </View>
 
-          <Text style={[styles.text, styles.bold, { marginTop: 10 }]}>Available Sessions</Text>
-          <View style={styles.scheduleContainer}>
-            <View style={{ flexDirection: 'row' }}>
-              <View>
-                <View style={styles.cell}>
-                  <Text style={{ textAlign: 'center' }}>No.</Text>
-                </View>
-
-                {availableTimes.map((time) => (
-                  <View style={styles.cell}>
-                    <Text key={time.start} style={{ textAlign: 'center' }}>
-                      {`${time.start} ~ ${time.end}`}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-              <ScrollView horizontal bounces={false} snapToInterval={30}>
+          {result.timeSlots.length === 0 ? (
+            <Text style={[styles.text, styles.bold, { marginTop: 10 }]}>No Sessions Available</Text>
+          ) : (
+            <>
+              <Text style={[styles.text, styles.bold, { marginTop: 10 }]}>Available Sessions</Text>
+              <View style={styles.scheduleContainer}>
                 <View style={{ flexDirection: 'row' }}>
-                  {timeslotGroupByFacility.map((timeSlots) => (
-                    <View key={getCourtNo(timeSlots.at(0)?.facilityName ?? '')}>
-                      <View style={[styles.cell, styles.timeSlot]}>
-                        <Text>{getCourtNo(timeSlots.at(0)?.facilityName ?? '')}</Text>
+                  <View>
+                    <View style={styles.cell}>
+                      <Text style={{ textAlign: 'center' }}>No.</Text>
+                    </View>
+
+                    {availableTimes.map((time) => (
+                      <View style={styles.cell}>
+                        <Text key={time.start} style={{ textAlign: 'center' }}>
+                          {`${time.start} ~ ${time.end}`}
+                        </Text>
                       </View>
-                      {_.uniqBy(timeSlots, 'start').map((slot, idx) => (
-                        <View key={slot.start} style={[styles.cell, styles.timeSlot, { backgroundColor: slot.status === 'A' ? '#90ee90' : 'pink' }]}>
-                          <Text>{slot.status}</Text>
+                    ))}
+                  </View>
+                  <ScrollView horizontal bounces={false} snapToInterval={30}>
+                    <View style={{ flexDirection: 'row' }}>
+                      {timeslotGroupByFacility.map((timeSlots) => (
+                        <View key={getCourtNo(timeSlots.at(0)?.facilityName ?? '')}>
+                          <View style={[styles.cell, styles.timeSlot]}>
+                            <Text>{getCourtNo(timeSlots.at(0)?.facilityName ?? '')}</Text>
+                          </View>
+                          {_.uniqBy(timeSlots, 'start').map((slot, idx) => (
+                            <View key={slot.start} style={[styles.cell, styles.timeSlot, { backgroundColor: slot.status === 'A' ? '#90ee90' : 'pink' }]}>
+                              <Text>{slot.status}</Text>
+                            </View>
+                          ))}
                         </View>
                       ))}
                     </View>
-                  ))}
+                  </ScrollView>
                 </View>
-              </ScrollView>
-            </View>
-          </View>
+              </View>
+            </>
+          )}
         </View>
-        <Text style={{textAlign: 'right', paddingHorizontal: 20}}>Enquired at {result.enquiryTime.toLocaleDateString()} {result.enquiryTime.toLocaleTimeString()}</Text>
-
+        <Text style={{ textAlign: 'right', paddingHorizontal: 20 }}>
+          Enquired at {result.enquiryTime.toLocaleDateString()} {result.enquiryTime.toLocaleTimeString()}
+        </Text>
       </ScrollView>
     </View>
   );
