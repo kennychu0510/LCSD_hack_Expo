@@ -1,21 +1,23 @@
 import { Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import _ from 'lodash';
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import SportCard from '../components/SportCard';
 import useEnquiryContext from '../hooks/useEnquiryContext';
 import { getSportIcon } from '../utilities/sportIcon';
-
+import { ITimeSlot } from '../utilities/resultParser';
+import { AntDesign } from '@expo/vector-icons';
 const Results = () => {
   const enquiryResult = useEnquiryContext();
   const result = enquiryResult.enquiry;
+  const [timeslotDetail, setTimeslotDetail] = useState<ITimeSlot | null>(null);
 
   if (!result) return null;
 
   const timeslotGroupByFacility = Object.values(_.groupBy(result.timeSlots, 'facilityName'));
   const availableTimes = _.uniqBy(result.timeSlots, 'start');
 
-  console.log(JSON.stringify(result))
+  console.log(JSON.stringify(result));
 
   return (
     <View style={styles.container}>
@@ -68,9 +70,11 @@ const Results = () => {
                             <Text>{getCourtNo(timeSlots.at(0)?.facilityName ?? '')}</Text>
                           </View>
                           {_.uniqBy(timeSlots, 'start').map((slot, idx) => (
-                            <View key={slot.start} style={[styles.cell, styles.timeSlot, { backgroundColor: slot.status === 'A' ? '#90ee90' : 'pink' }]}>
-                              <Text>{slot.status}</Text>
-                            </View>
+                            <TouchableOpacity key={slot.start} onPress={() => setTimeslotDetail(slot)}>
+                              <View style={[styles.cell, styles.timeSlot, { backgroundColor: slot.status === 'A' ? '#90ee90' : 'pink' }]}>
+                                <Text>{slot.status}</Text>
+                              </View>
+                            </TouchableOpacity>
                           ))}
                         </View>
                       ))}
@@ -82,6 +86,44 @@ const Results = () => {
           )}
         </View>
       </ScrollView>
+      <Modal visible={!!timeslotDetail} transparent statusBarTranslucent animationType='fade'>
+        <TouchableWithoutFeedback onPress={() => setTimeslotDetail(null)}>
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={styles.detailCard}>
+              <View style={{ alignSelf: 'center', marginBottom: 10 }}>
+                <SportCard icon={getSportIcon(result?.venue.sportName)} name={result.venue.sportName} />
+              </View>
+              <View style={styles.row}>
+                <MaterialIcons name='date-range' size={24} color='black' style={styles.icon} />
+                <Text style={styles.text}>{result.date.toLocaleDateString()}</Text>
+              </View>
+              <View style={styles.row}>
+                <MaterialCommunityIcons name='office-building-marker-outline' size={24} color='black' style={styles.icon} />
+                <Text style={[styles.text, { textAlign: 'right' }]}>{result.venue.venueName}</Text>
+              </View>
+              <View style={styles.row}>
+                <Entypo name='location-pin' size={24} color='black' style={styles.icon} />
+                <Text style={[styles.text, { textAlign: 'right' }]}>{result.venue.address.trim()}</Text>
+              </View>
+              <View style={styles.row}>
+                <Entypo name='info' size={22} color='black' />
+                <Text style={styles.text}>{timeslotDetail?.facilityName}</Text>
+              </View>
+              <View style={styles.row}>
+                <AntDesign name='clockcircleo' size={22} color='black' />
+                <Text style={styles.text}>{`${timeslotDetail?.start} ~ ${timeslotDetail?.end}`}</Text>
+              </View>
+              <View style={[styles.row, { justifyContent: 'center' }]}>
+                {timeslotDetail?.status === 'A' ? (
+                  <Text style={[styles.text, { color: '#90ee90', fontWeight: 'bold' }]}>AVAILABLE</Text>
+                ) : (
+                  <Text style={[styles.text, { color: 'red', fontWeight: 'bold' }]}>UNAVAILABLE</Text>
+                )}
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 };
@@ -129,6 +171,13 @@ const styles = StyleSheet.create({
   },
   scheduleContainer: {
     marginVertical: 5,
+  },
+  detailCard: {
+    borderRadius: 20,
+    padding: 20,
+    justifyContent: 'center',
+    backgroundColor: '#FFF',
+    marginHorizontal: 20,
   },
 });
 
