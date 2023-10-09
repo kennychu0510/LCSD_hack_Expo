@@ -63,6 +63,7 @@ const Landing = () => {
   }
 
   const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity

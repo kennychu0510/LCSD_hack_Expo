@@ -15,17 +15,22 @@ import SportCard from '../components/SportCard';
 import useEnquiryContext from '../hooks/useEnquiryContext';
 import { ITimeSlot } from '../utilities/resultParser';
 import { getSportIcon } from '../utilities/sportIcon';
+import moment from 'moment';
 const Results = () => {
   const enquiryResult = useEnquiryContext();
   const result = enquiryResult.enquiry;
   const [timeslotDetail, setTimeslotDetail] = useState<ITimeSlot | null>(null);
 
-  if (!result) return null;
+  if (!result) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{color: '#444'}}>There are no previous records</Text>
+      </View>
+    )
+  };
 
   const timeslotGroupByFacility = Object.values(_.groupBy(result.timeSlots, 'facilityName'));
   const availableTimes = _.uniqBy(result.timeSlots, 'start');
-
-  console.log(JSON.stringify(result));
 
   return (
     <View style={styles.container}>
@@ -162,6 +167,7 @@ const Results = () => {
                   </Text>
                 )}
               </View>
+              <Text style={{color: '#333', textAlign: 'right'}}>{moment(result.enquiryTime).fromNow()}</Text>
             </View>
           </View>
         </TouchableWithoutFeedback>
