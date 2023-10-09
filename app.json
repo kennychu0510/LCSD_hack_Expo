@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "lcsd-enquirer"
+      "bundleIdentifier": "lcsd-enquirer-app"
     },
     "android": {
       "adaptiveIcon": {

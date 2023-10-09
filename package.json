@@ -61,13 +61,20 @@
   "private": true,
   "eslintConfig": {
     "extends": "universe/native",
-    "plugins": ["unused-imports"],
+    "plugins": [
+      "unused-imports"
+    ],
     "rules": {
       "no-unused-vars": "off",
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
         "off",
-        { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+        {
+          "vars": "all",
+          "varsIgnorePattern": "^_",
+          "args": "after-used",
+          "argsIgnorePattern": "^_"
+        }
       ],
       "no-case-declarations": "off"
     }
