@@ -82,7 +82,7 @@ export const setDropdown = (options: EnquiryInputOption) => {
               session: session_time.innerText,
               schedule: resultsTable.outerHTML
             }
-            // _consoleLog(output, 'results');
+            _consoleLog(output, 'results');
           }
           
         }

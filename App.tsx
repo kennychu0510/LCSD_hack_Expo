@@ -1,24 +1,34 @@
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import RootNavigator from './src/navigator/RootNavigator';
 import { ThemeProvider, createTheme } from '@rneui/themed';
+import { useMemo, useState } from 'react';
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
-import { RecoilRoot } from 'recoil';
+import { Enquiry, EnquiryContext } from './src/hooks/useEnquiryContext';
+import RootNavigator from './src/navigator/RootNavigator';
 
 const theme = createTheme({
   mode: 'light',
 });
 
 export default function App() {
+  const [enquiry, setEnquiry] = useState<Enquiry | null>(null);
+  const contextValue = useMemo(
+    () => ({
+      enquiry,
+      setEnquiry,
+    }),
+    [enquiry, setEnquiry]
+  );
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle={'dark-content'}/>
+      <StatusBar barStyle={'dark-content'} />
       <ThemeProvider theme={theme}>
-        <RecoilRoot>
+        <EnquiryContext.Provider value={contextValue}>
           <NavigationContainer>
             <RootNavigator />
           </NavigationContainer>
-        </RecoilRoot>
+        </EnquiryContext.Provider>
       </ThemeProvider>
     </SafeAreaView>
   );

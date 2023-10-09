@@ -9,12 +9,11 @@ import { INITIAL_SCRIPT } from '../injectedScripts/initialScript';
 import { Button, ListItem, SearchBar } from '@rneui/themed';
 import Loading from './LoadingModal';
 import { ISession, getSession } from '../utilities/resultParser';
-import { useRecoilState } from 'recoil';
-import { Enquiry, EnquiryResult } from '../recoil';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigator/RootNavigator';
 import { SCRIPT_FUNCTIONS } from '../injectedScripts/common';
+import useEnquiryContext, { Enquiry } from '../hooks/useEnquiryContext';
 
 type Props = {
   enquiredVenue: Venue | undefined;
@@ -23,26 +22,18 @@ type Props = {
 
 const EnquiryWebview = (props: Props) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const { setEnquiry } = useEnquiryContext();
   const { enquiredVenue, date } = props;
   const [results, setResults] = useState<string>('');
   const resultsRecord = useRef<any>({});
   const webviewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(false);
   const [key, setKey] = useState(0);
-  const [currentEnquiry, setCurrentEnquiry] = useState<Enquiry>({
-    date,
-    timeSlots: [],
-    venue: enquiredVenue!,
-    enquiryTime: new Date(),
-  });
-
-  const [resultSchedule, setResultSchedule] = useRecoilState(EnquiryResult);
 
   function onClear() {
     setResults('');
     resultsRecord.current = {};
   }
-
 
   function onEnquire() {
     onClear();
@@ -54,7 +45,7 @@ const EnquiryWebview = (props: Props) => {
       return;
     }
 
-    setCurrentEnquiry({
+    setEnquiry({
       date,
       timeSlots: [],
       enquiryTime: new Date(),
@@ -76,14 +67,25 @@ const EnquiryWebview = (props: Props) => {
         case 'results':
           const enquiryResults = data.message as any as ResultsFromEnquiry;
           const { venue, schedule, session } = enquiryResults;
+          console.log({schedule})
           const parsedSession = getSession(schedule);
           if (parsedSession) {
             const { timeSlots } = parsedSession;
             console.log({ timeSlots });
-            setCurrentEnquiry((currentEnquiry) => ({
-              ...currentEnquiry,
-              timeSlots: [...currentEnquiry.timeSlots, ...timeSlots],
-            }));
+            setEnquiry((currentEnquiry) => {
+              if (currentEnquiry) {
+                return {
+                  ...currentEnquiry,
+                  timeSlots: [...currentEnquiry.timeSlots, ...timeSlots],
+                };
+              }
+              return {
+                date,
+                enquiryTime: new Date(),
+                timeSlots,
+                venue: enquiredVenue!,
+              };
+            });
           }
           console.log(schedule);
           if (!resultsRecord.current[venue]) {
@@ -106,7 +108,6 @@ const EnquiryWebview = (props: Props) => {
           }
           break;
         case 'done':
-          setResultSchedule(currentEnquiry);
           Alert.alert('Booking Details Retrieved', undefined, [{ text: 'See Results', onPress: goToResults }]);
           setLoading(false);
           break;
@@ -154,7 +155,7 @@ const EnquiryWebview = (props: Props) => {
           javaScriptCanOpenWindowsAutomatically={true}
           userAgent={getUserAgent()}
         />
-        <View style={{ paddingHorizontal: 20,backgroundColor: '#FFF', paddingTop: 20 }}>
+        <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
           <Button onPress={goToResults}>Results</Button>
         </View>
 

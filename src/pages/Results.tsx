@@ -1,22 +1,21 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { useRecoilValue } from 'recoil';
-import { getResultsStore } from '../recoil';
-import useSetHeader from '../hooks/useSetHeader';
-import SportCard from '../components/SportCard';
-import { getSportIcon } from '../utilities/sportIcon';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import _ from 'lodash';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import SportCard from '../components/SportCard';
+import useEnquiryContext from '../hooks/useEnquiryContext';
+import { getSportIcon } from '../utilities/sportIcon';
 
 const Results = () => {
-  const result = useRecoilValue(getResultsStore);
+  const enquiryResult = useEnquiryContext();
+  const result = enquiryResult.enquiry;
 
   if (!result) return null;
 
   const timeslotGroupByFacility = Object.values(_.groupBy(result.timeSlots, 'facilityName'));
   const availableTimes = _.uniqBy(result.timeSlots, 'start');
+
+  console.log(JSON.stringify(result))
 
   return (
     <View style={styles.container}>
@@ -43,6 +42,9 @@ const Results = () => {
           ) : (
             <>
               <Text style={[styles.text, styles.bold, { marginTop: 10 }]}>Available Sessions</Text>
+              <Text>
+                Enquired at {result.enquiryTime.toLocaleDateString()} {result.enquiryTime.toLocaleTimeString()}
+              </Text>
               <View style={styles.scheduleContainer}>
                 <View style={{ flexDirection: 'row' }}>
                   <View>
@@ -51,14 +53,14 @@ const Results = () => {
                     </View>
 
                     {availableTimes.map((time) => (
-                      <View style={styles.cell}>
+                      <View style={styles.cell} key={time.start}>
                         <Text key={time.start} style={{ textAlign: 'center' }}>
                           {`${time.start} ~ ${time.end}`}
                         </Text>
                       </View>
                     ))}
                   </View>
-                  <ScrollView horizontal bounces={false} snapToInterval={30}>
+                  <ScrollView horizontal bounces={false}>
                     <View style={{ flexDirection: 'row' }}>
                       {timeslotGroupByFacility.map((timeSlots) => (
                         <View key={getCourtNo(timeSlots.at(0)?.facilityName ?? '')}>
@@ -79,9 +81,6 @@ const Results = () => {
             </>
           )}
         </View>
-        <Text style={{ textAlign: 'right', paddingHorizontal: 20 }}>
-          Enquired at {result.enquiryTime.toLocaleDateString()} {result.enquiryTime.toLocaleTimeString()}
-        </Text>
       </ScrollView>
     </View>
   );
