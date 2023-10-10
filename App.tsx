@@ -5,22 +5,21 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import { Enquiry, EnquiryContext } from './src/hooks/useEnquiryContext';
 import RootNavigator from './src/navigator/RootNavigator';
-import enquiryResults from './sampleResults/enquiryResults.json';
 import moment from 'moment';
 
 
-const enquiryResultsForDebug = {
-  ...enquiryResults,
-  date: moment(enquiryResults.date).toDate(),
-  enquiryTime: moment(enquiryResults.enquiryTime).toDate(),
-};
+// const enquiryResultsForDebug = {
+//   ...enquiryResults,
+//   date: moment(enquiryResults.date).toDate(),
+//   enquiryTime: moment(enquiryResults.enquiryTime).toDate(),
+// };
 
 const theme = createTheme({
   mode: 'light',
 });
 
 export default function App() {
-  const [enquiry, setEnquiry] = useState<Enquiry | null>(enquiryResultsForDebug);
+  const [enquiry, setEnquiry] = useState<Enquiry | null>(null);
   const contextValue = useMemo(
     () => ({
       enquiry,
