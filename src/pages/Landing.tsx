@@ -111,9 +111,10 @@ const Landing = () => {
         isExpanded={facilityExpanded}
         onPress={() => setFacilityExpanded((state) => !state)}>
         <FacilitySelect
-          setFacilities={onSetFacility}
+          setFacility={onSetFacility}
           selectedFacility={selectedFacility}
           onReset={onResetFacilities}
+          selectedVenue={selectedVenue}
         />
       </ListItem.Accordion>
 

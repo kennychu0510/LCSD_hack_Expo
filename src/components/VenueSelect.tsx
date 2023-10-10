@@ -19,8 +19,8 @@ const VenueSelect = (props: Props) => {
   const { setVenue, venue, facility } = props;
   const [searchValue, setSearchValue] = useState('');
 
-  const filteredVenues = SortedVenues.filter(
-    (venue) => venue.sportValue === facility?.value
+  const filteredVenues = SortedVenues.filter((venue) =>
+    venue.sportValue.includes(facility?.value ?? '')
   ).filter((item) => item.venueName.includes(searchValue));
   const uniqueVenues = _.uniqBy(filteredVenues, 'venueValue');
 

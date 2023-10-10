@@ -7,7 +7,6 @@ import { Enquiry, EnquiryContext } from './src/hooks/useEnquiryContext';
 import RootNavigator from './src/navigator/RootNavigator';
 import enquiryResults from './sampleResults/enquiryResults.json';
 import moment from 'moment';
-import { StatusBar } from 'expo-status-bar';
 
 
 const enquiryResultsForDebug = {
@@ -32,7 +31,6 @@ export default function App() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* <StatusBar style={'dark'} /> */}
       <ThemeProvider theme={theme}>
         <EnquiryContext.Provider value={contextValue}>
           <NavigationContainer>

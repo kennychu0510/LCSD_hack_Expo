@@ -154,3 +154,7 @@ export function getUserAgent(): string {
   const length = USER_AGENT.length;
   return USER_AGENT[Math.floor(Math.random() * length)];
 }
+
+export function getAllSportsInVenue(value: string): Venue[] {
+  return VenueOptions.filter((item) => item.venueValue === value);
+}

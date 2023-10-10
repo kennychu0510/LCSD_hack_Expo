@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Button } from '@rneui/themed';
 import React, { useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import WebView, { WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
+import WebView, { WebViewMessageEvent } from 'react-native-webview';
 
 import Loading from './LoadingModal';
 import useEnquiryContext from '../hooks/useEnquiryContext';
@@ -137,7 +137,7 @@ const EnquiryWebview = (props: Props) => {
                 },
               ]);
             } else if (e.url.includes('/dispatchFlow.do')) {
-              if (!!enquiredVenue) {
+              if (enquiredVenue) {
                 onEnquire();
               }
             } else if (e.url.includes('/tokenVerifyFailed')) {
