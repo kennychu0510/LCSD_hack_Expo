@@ -67,6 +67,7 @@ const Landing = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
+        disabled={IS_IOS}
         style={[styles.row, { paddingBottom: 5 }]}
         onPress={() => setShowDatePicker(true)}>
         <View style={{ flexDirection: 'row' }}>
@@ -134,7 +135,7 @@ const Landing = () => {
       <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} />
       {!!enquiry && (
         <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
-          <Button onPress={goToResults}>Results</Button>
+          <Button onPress={goToResults}>Last Enquiry Result</Button>
         </View>
       )}
     </View>
