@@ -32,7 +32,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar style={'light'} />
+      {/* <StatusBar style={'dark'} /> */}
       <ThemeProvider theme={theme}>
         <EnquiryContext.Provider value={contextValue}>
           <NavigationContainer>

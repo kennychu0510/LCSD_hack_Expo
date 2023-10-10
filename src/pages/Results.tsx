@@ -1,19 +1,18 @@
 import { AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import _ from 'lodash';
+import moment from 'moment';
 import React, { useRef, useState } from 'react';
 import {
   Modal,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-
-import moment from 'moment';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import SportCard from '../components/SportCard';
 import useEnquiryContext from '../hooks/useEnquiryContext';
 import { SCREEN_HEIGHT } from '../utilities/constants';
@@ -106,7 +105,7 @@ const Results = () => {
                     scrollEventThrottle={16}
                     onScroll={(e) => {
                       const { x, y } = e.nativeEvent.contentOffset;
-                      headerScrollRef.current?.scrollTo({ x: x, y: 0, animated: false });
+                      headerScrollRef.current?.scrollTo({ x, y: 0, animated: false });
                     }}>
                     <View style={{ flexDirection: 'row' }}>
                       {timeslotGroupByFacility.map((timeSlots) => (

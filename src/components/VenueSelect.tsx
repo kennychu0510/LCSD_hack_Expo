@@ -35,6 +35,7 @@ const VenueSelect = (props: Props) => {
         containerStyle={{ paddingHorizontal: 10 }}
         placeholder="Venue"
       />
+
       <FlatList
         onLayout={(e) => {
           setOffset(e.nativeEvent.layout.y);

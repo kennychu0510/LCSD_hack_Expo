@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "lcsd_hack",
-    "slug": "lcsd_hack",
+    "name": "LCSD Enquirer",
+    "slug": "LCSD Enquirer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/sportIcons/lcsd_logo.png",
