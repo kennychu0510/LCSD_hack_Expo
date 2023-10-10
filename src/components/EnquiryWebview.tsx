@@ -8,7 +8,7 @@ import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import Loading from './LoadingModal';
 import useEnquiryContext from '../hooks/useEnquiryContext';
 import { setDropdown } from '../injectedScripts/enquiry';
-import { INITIAL_SCRIPT } from '../injectedScripts/initialScript';
+import { CHECK_CURRENT_URL, INITIAL_SCRIPT } from '../injectedScripts/initialScript';
 import { RootStackParamList } from '../navigator/RootNavigator';
 import { LCSD_URL } from '../utilities/constants';
 import { Venue, getUserAgent, parseEnquiryOptionForInject } from '../utilities/helper';
@@ -136,10 +136,6 @@ const EnquiryWebview = (props: Props) => {
                   text: 'Ok',
                 },
               ]);
-            } else if (e.url.includes('/dispatchFlow.do')) {
-              if (enquiredVenue) {
-                onEnquire();
-              }
             } else if (e.url.includes('/tokenVerifyFailed')) {
               setAlertShown(true);
               Alert.alert('Token Verify Failed', 'Please reload and try again', [
@@ -151,6 +147,8 @@ const EnquiryWebview = (props: Props) => {
                   text: 'Ok',
                 },
               ]);
+            } else {
+              webviewRef.current?.injectJavaScript(CHECK_CURRENT_URL);
             }
           }}
         />
