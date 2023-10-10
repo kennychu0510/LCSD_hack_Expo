@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Button } from '@rneui/themed';
 import React, { useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import WebView, { WebViewMessageEvent } from 'react-native-webview';
+import WebView, { WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
 
 import Loading from './LoadingModal';
 import useEnquiryContext from '../hooks/useEnquiryContext';
@@ -123,10 +123,26 @@ const EnquiryWebview = (props: Props) => {
           javaScriptCanOpenWindowsAutomatically
           userAgent={getUserAgent()}
           onNavigationStateChange={(e) => {
+            console.log(e.url);
             if (e.url.includes('/retry')) {
               if (alertShown) return;
               setAlertShown(true);
               Alert.alert('Unable to enquiry', 'LCSD is currently unavailable', [
+                {
+                  text: 'Reload',
+                  onPress: onReload,
+                },
+                {
+                  text: 'Ok',
+                },
+              ]);
+            } else if (e.url.includes('/dispatchFlow.do')) {
+              if (!!enquiredVenue) {
+                onEnquire();
+              }
+            } else if (e.url.includes('/tokenVerifyFailed')) {
+              setAlertShown(true);
+              Alert.alert('Token Verify Failed', 'Please reload and try again', [
                 {
                   text: 'Reload',
                   onPress: onReload,
