@@ -6,6 +6,7 @@ import 'react-native-gesture-handler';
 import { Enquiry, EnquiryContext } from './src/hooks/useEnquiryContext';
 import RootNavigator from './src/navigator/RootNavigator';
 import moment from 'moment';
+import { StatusBar } from 'expo-status-bar';
 
 
 // const enquiryResultsForDebug = {
@@ -31,6 +32,7 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ThemeProvider theme={theme}>
+        <StatusBar style='auto'/>
         <EnquiryContext.Provider value={contextValue}>
           <NavigationContainer>
             <RootNavigator />
