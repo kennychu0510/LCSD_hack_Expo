@@ -6,6 +6,7 @@ import { Button, ListItem } from '@rneui/themed';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import sportIcons from '../../assets/sportIcons';
 import EnquiryWebview from '../components/EnquiryWebview';
@@ -16,7 +17,6 @@ import { RootStackParamList } from '../navigator/RootNavigator';
 import { IS_ANDROID, IS_IOS } from '../utilities/constants';
 import { getEnquiryOption, getVenueByValue } from '../utilities/helper';
 import { getSportIcon } from '../utilities/sportIcon';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MaxDate = moment().add(7, 'd').toDate();
 const Today = getToday();
@@ -39,7 +39,7 @@ const Landing = () => {
   const [selectedVenue, setSelectedVenue] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { enquiry } = useEnquiryContext();
-  const [isEnquiring, setIsEnquiring] = useState(false)
+  const [isEnquiring, setIsEnquiring] = useState(false);
 
   function onResetFacilities() {
     setSelectedFacility(null);
@@ -65,9 +65,10 @@ const Landing = () => {
   }
 
   const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
+  const tabExpanded = facilityExpanded || venueExpanded;
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <TouchableOpacity
           disabled={IS_IOS}
@@ -115,14 +116,8 @@ const Landing = () => {
             </>
           }
           isExpanded={facilityExpanded}
-          onPress={() => setFacilityExpanded((state) => !state)}>
-          <FacilitySelect
-            setFacility={onSetFacility}
-            selectedFacility={selectedFacility}
-            onReset={onResetFacilities}
-            selectedVenue={selectedVenue}
-          />
-        </ListItem.Accordion>
+          onPress={() => setFacilityExpanded((state) => !state)}
+        />
 
         <ListItem.Accordion
           content={
@@ -138,15 +133,33 @@ const Landing = () => {
             </>
           }
           isExpanded={venueExpanded}
-          onPress={() => setVenueExpanded((state) => !state)}>
-          <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
-        </ListItem.Accordion>
-        <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} setIsEnquiring={setIsEnquiring} />
-        {!!enquiry && !isEnquiring && (
-          <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
-            <Button onPress={goToResults}>Last Enquiry Result</Button>
-          </View>
+          onPress={() => setVenueExpanded((state) => !state)}
+        />
+
+        {facilityExpanded && (
+          <FacilitySelect
+            setFacility={onSetFacility}
+            selectedFacility={selectedFacility}
+            onReset={onResetFacilities}
+            selectedVenue={selectedVenue}
+          />
         )}
+        {venueExpanded && (
+          <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
+        )}
+
+        <View style={{ position: tabExpanded ? 'absolute' : 'relative', flex: 1, zIndex: -1 }}>
+          <EnquiryWebview
+            date={selectedDate}
+            enquiredVenue={enquiredVenue}
+            setIsEnquiring={setIsEnquiring}
+          />
+          {!!enquiry && !isEnquiring && (
+            <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
+              <Button onPress={goToResults}>Last Enquiry Result</Button>
+            </View>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );

@@ -17,7 +17,7 @@ import { getSession } from '../utilities/resultParser';
 type Props = {
   enquiredVenue: Venue | undefined;
   date: Date;
-  setIsEnquiring: React.Dispatch<React.SetStateAction<boolean>>
+  setIsEnquiring: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const EnquiryWebview = (props: Props) => {
@@ -30,7 +30,7 @@ const EnquiryWebview = (props: Props) => {
   const [alertShown, setAlertShown] = useState(false);
 
   function onEnquire() {
-    setIsEnquiring(true)
+    setIsEnquiring(true);
     const web = webviewRef.current;
 
     if (!enquiredVenue) {

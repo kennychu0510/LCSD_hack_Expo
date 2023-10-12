@@ -1,10 +1,9 @@
 import { SearchBar } from '@rneui/themed';
 import React, { useMemo, useState } from 'react';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 
 import sports from '../../assets/sports.json';
 import SportCard from '../components/SportCard';
-import { SCREEN_HEIGHT } from '../utilities/constants';
 import { getAllSportsInVenue } from '../utilities/helper';
 import { getSportIcon } from '../utilities/sportIcon';
 
@@ -30,7 +29,6 @@ const FacilitySelect = (props: Props) => {
   const { setFacility, selectedFacility, selectedVenue } = props;
   const [searchValue, setSearchValue] = useState('');
   const sortedSports = sportsWithIcon.filter((sport) => sport.name.includes(searchValue));
-  const [offset, setOffset] = useState(0);
 
   const filteredSports = useMemo(() => {
     if (selectedVenue) {
@@ -43,7 +41,7 @@ const FacilitySelect = (props: Props) => {
   }, [selectedVenue, sortedSports]);
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <SearchBar
         value={searchValue}
         onChangeText={setSearchValue}
@@ -52,20 +50,16 @@ const FacilitySelect = (props: Props) => {
         containerStyle={{ paddingHorizontal: 10 }}
       />
       <FlatList
-        onLayout={(e) => {
-          setOffset(e.nativeEvent.layout.y);
-        }}
         data={filteredSports}
         numColumns={3}
-        style={{ height: SCREEN_HEIGHT - offset }}
-        contentContainerStyle={{ padding: 5, paddingBottom: offset + 10 }}
+        contentContainerStyle={{ padding: 5 }}
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => setFacility(item)}>
             <SportCard {...item} selected={selectedFacility?.value === item.value} />
           </TouchableOpacity>
         )}
       />
-    </>
+    </View>
   );
 };
 

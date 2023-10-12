@@ -2,10 +2,9 @@ import { Entypo } from '@expo/vector-icons';
 import { SearchBar } from '@rneui/themed';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import VenueOptions from '../../assets/venueOptions.json';
-import { SCREEN_HEIGHT } from '../utilities/constants';
 
 type Props = {
   setVenue: (venue: string) => void;
@@ -24,10 +23,8 @@ const VenueSelect = (props: Props) => {
   ).filter((item) => item.venueName.includes(searchValue));
   const uniqueVenues = _.uniqBy(filteredVenues, 'venueValue');
 
-  const [offset, setOffset] = useState(0);
-
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <SearchBar
         value={searchValue}
         onChangeText={setSearchValue}
@@ -37,11 +34,6 @@ const VenueSelect = (props: Props) => {
       />
 
       <FlatList
-        onLayout={(e) => {
-          setOffset(e.nativeEvent.layout.y);
-        }}
-        style={{ height: SCREEN_HEIGHT - offset - 75 }}
-        contentContainerStyle={{ paddingBottom: offset + 75 + 10 }}
         data={uniqueVenues}
         renderItem={({ item, index }) => (
           <TouchableOpacity style={styles.venueContainer} onPress={() => setVenue(item.venueValue)}>
@@ -52,7 +44,7 @@ const VenueSelect = (props: Props) => {
           </TouchableOpacity>
         )}
       />
-    </>
+    </View>
   );
 };
 
