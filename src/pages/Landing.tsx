@@ -39,6 +39,7 @@ const Landing = () => {
   const [selectedVenue, setSelectedVenue] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { enquiry } = useEnquiryContext();
+  const [isEnquiring, setIsEnquiring] = useState(false)
 
   function onResetFacilities() {
     setSelectedFacility(null);
@@ -140,8 +141,8 @@ const Landing = () => {
           onPress={() => setVenueExpanded((state) => !state)}>
           <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
         </ListItem.Accordion>
-        <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} />
-        {!!enquiry && (
+        <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} setIsEnquiring={setIsEnquiring} />
+        {!!enquiry && !isEnquiring && (
           <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
             <Button onPress={goToResults}>Last Enquiry Result</Button>
           </View>

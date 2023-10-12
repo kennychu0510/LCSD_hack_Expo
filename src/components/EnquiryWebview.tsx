@@ -17,18 +17,20 @@ import { getSession } from '../utilities/resultParser';
 type Props = {
   enquiredVenue: Venue | undefined;
   date: Date;
+  setIsEnquiring: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const EnquiryWebview = (props: Props) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { setEnquiry } = useEnquiryContext();
-  const { enquiredVenue, date } = props;
+  const { enquiredVenue, date, setIsEnquiring } = props;
   const webviewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(false);
   const [key, setKey] = useState(0);
   const [alertShown, setAlertShown] = useState(false);
 
   function onEnquire() {
+    setIsEnquiring(true)
     const web = webviewRef.current;
 
     if (!enquiredVenue) {
@@ -81,6 +83,7 @@ const EnquiryWebview = (props: Props) => {
           break;
         case 'done':
           setLoading(false);
+          setIsEnquiring(false);
           navigation.navigate('Results');
           break;
 
