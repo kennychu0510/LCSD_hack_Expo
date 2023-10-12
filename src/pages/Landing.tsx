@@ -16,6 +16,7 @@ import { RootStackParamList } from '../navigator/RootNavigator';
 import { IS_ANDROID, IS_IOS } from '../utilities/constants';
 import { getEnquiryOption, getVenueByValue } from '../utilities/helper';
 import { getSportIcon } from '../utilities/sportIcon';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MaxDate = moment().add(7, 'd').toDate();
 const Today = getToday();
@@ -65,26 +66,17 @@ const Landing = () => {
   const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        disabled={IS_IOS}
-        style={[styles.row, { paddingBottom: 5 }]}
-        onPress={() => setShowDatePicker(true)}>
-        <View style={{ flexDirection: 'row' }}>
-          <MaterialIcons name="date-range" size={24} color="black" style={{ marginRight: 20 }} />
-          <Text style={{ fontSize: 20 }}>Date</Text>
-        </View>
-        {IS_IOS ? (
-          <DateTimePicker
-            value={selectedDate}
-            maximumDate={MaxDate}
-            minimumDate={Today}
-            onChange={(_, date) => {
-              date && onSetDate(date);
-            }}
-          />
-        ) : (
-          showDatePicker && (
+    <SafeAreaView style={{flex: 1}}>
+      <View style={styles.container}>
+        <TouchableOpacity
+          disabled={IS_IOS}
+          style={[styles.row, { paddingBottom: 5 }]}
+          onPress={() => setShowDatePicker(true)}>
+          <View style={{ flexDirection: 'row' }}>
+            <MaterialIcons name="date-range" size={24} color="black" style={{ marginRight: 20 }} />
+            <Text style={{ fontSize: 20 }}>Date</Text>
+          </View>
+          {IS_IOS ? (
             <DateTimePicker
               value={selectedDate}
               maximumDate={MaxDate}
@@ -93,52 +85,69 @@ const Landing = () => {
                 date && onSetDate(date);
               }}
             />
-          )
-        )}
-        {IS_ANDROID && <Text style={{ fontSize: 20 }}>{selectedDate.toLocaleDateString()}</Text>}
-      </TouchableOpacity>
-      <ListItem.Accordion
-        content={
-          <>
-            <Image
-              source={selectedFacility ? getSportIcon(selectedFacility.name) : sportIcons.lcsd_logo}
-              style={{ width: 24, height: 24, resizeMode: 'contain' }}
-            />
-            <Text style={[styles.tabLabel, { color: selectedFacility ? '#000' : '#555' }]}>
-              {selectedFacility?.name ?? 'Select a Facility'}
-            </Text>
-          </>
-        }
-        isExpanded={facilityExpanded}
-        onPress={() => setFacilityExpanded((state) => !state)}>
-        <FacilitySelect
-          setFacility={onSetFacility}
-          selectedFacility={selectedFacility}
-          onReset={onResetFacilities}
-          selectedVenue={selectedVenue}
-        />
-      </ListItem.Accordion>
+          ) : (
+            showDatePicker && (
+              <DateTimePicker
+                value={selectedDate}
+                maximumDate={MaxDate}
+                minimumDate={Today}
+                onChange={(_, date) => {
+                  date && onSetDate(date);
+                }}
+              />
+            )
+          )}
+          {IS_ANDROID && <Text style={{ fontSize: 20 }}>{selectedDate.toLocaleDateString()}</Text>}
+        </TouchableOpacity>
+        <ListItem.Accordion
+          content={
+            <>
+              <Image
+                source={
+                  selectedFacility ? getSportIcon(selectedFacility.name) : sportIcons.lcsd_logo
+                }
+                style={{ width: 24, height: 24, resizeMode: 'contain' }}
+              />
+              <Text style={[styles.tabLabel, { color: selectedFacility ? '#000' : '#555' }]}>
+                {selectedFacility?.name ?? 'Select a Facility'}
+              </Text>
+            </>
+          }
+          isExpanded={facilityExpanded}
+          onPress={() => setFacilityExpanded((state) => !state)}>
+          <FacilitySelect
+            setFacility={onSetFacility}
+            selectedFacility={selectedFacility}
+            onReset={onResetFacilities}
+            selectedVenue={selectedVenue}
+          />
+        </ListItem.Accordion>
 
-      <ListItem.Accordion
-        content={
-          <>
-            <MaterialCommunityIcons name="office-building-marker-outline" size={24} color="black" />
-            <Text style={[styles.tabLabel, { color: selectedVenue ? '#000' : '#555' }]}>
-              {getVenueByValue(selectedVenue)?.venueName ?? 'Select a Venue'}
-            </Text>
-          </>
-        }
-        isExpanded={venueExpanded}
-        onPress={() => setVenueExpanded((state) => !state)}>
-        <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
-      </ListItem.Accordion>
-      <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} />
-      {!!enquiry && (
-        <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
-          <Button onPress={goToResults}>Last Enquiry Result</Button>
-        </View>
-      )}
-    </View>
+        <ListItem.Accordion
+          content={
+            <>
+              <MaterialCommunityIcons
+                name="office-building-marker-outline"
+                size={24}
+                color="black"
+              />
+              <Text style={[styles.tabLabel, { color: selectedVenue ? '#000' : '#555' }]}>
+                {getVenueByValue(selectedVenue)?.venueName ?? 'Select a Venue'}
+              </Text>
+            </>
+          }
+          isExpanded={venueExpanded}
+          onPress={() => setVenueExpanded((state) => !state)}>
+          <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
+        </ListItem.Accordion>
+        <EnquiryWebview date={selectedDate} enquiredVenue={enquiredVenue} />
+        {!!enquiry && (
+          <View style={{ paddingHorizontal: 20, backgroundColor: '#FFF', paddingTop: 20 }}>
+            <Button onPress={goToResults}>Last Enquiry Result</Button>
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 

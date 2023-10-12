@@ -123,7 +123,6 @@ const EnquiryWebview = (props: Props) => {
           javaScriptCanOpenWindowsAutomatically
           userAgent={getUserAgent()}
           onNavigationStateChange={(e) => {
-            console.log(e.url);
             if (e.url.includes('/retry')) {
               if (alertShown) return;
               setAlertShown(true);
