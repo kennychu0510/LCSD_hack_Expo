@@ -32,7 +32,7 @@ const Results = () => {
   if (!result) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: '#444' }}>There are no previous records</Text>
+        <Text style={{ color: '#444' }}>No records</Text>
       </View>
     );
   }
@@ -137,7 +137,7 @@ const Results = () => {
           )}
         </View>
       </ScrollView>
-      {showFixedHeader && (
+      {/* {showFixedHeader && (
         <View
           style={{
             position: 'absolute',
@@ -157,7 +157,7 @@ const Results = () => {
             ))}
           </ScrollView>
         </View>
-      )}
+      )} */}
 
       <Modal visible={!!timeslotDetail} transparent statusBarTranslucent animationType="fade">
         <TouchableWithoutFeedback onPress={() => setTimeslotDetail(null)}>
