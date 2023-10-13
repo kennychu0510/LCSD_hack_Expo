@@ -10,7 +10,8 @@
     "ts:check": "tsc",
     "test": "jest --watch",
     "lint": "npx prettier --write src/* && npx eslint src/**/* --fix",
-    "build-apk": "eas build -p android --profile preview --local"
+    "build-apk": "eas build -p android --profile preview --local",
+    "prebuild-android-clean": "npx expo prebuild --platform android --clean"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",
