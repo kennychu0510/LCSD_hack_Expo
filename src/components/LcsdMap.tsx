@@ -3,7 +3,7 @@ import React from 'react';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import { LCSD_URL } from '../utilities/constants';
 import { Button } from '@rneui/themed';
-import { ScrollToFacilitySearch } from '../injectedScripts/map/ScrollToFacilitySearch';
+import { MapScript } from '../injectedScripts/map/MapScript';
 import { getVenueValueByName } from '../utilities/helper';
 
 const LcsdMap = ({
@@ -40,7 +40,7 @@ const LcsdMap = ({
         <WebView
           onMessage={(event: WebViewMessageEvent) => handleOnMessage(event)}
           source={{ uri: LCSD_URL.MAP }}
-          injectedJavaScript={ScrollToFacilitySearch}
+          injectedJavaScript={MapScript}
           injectedJavaScriptForMainFrameOnly={false}
           setSupportMultipleWindows={false}
           originWhitelist={['*']}

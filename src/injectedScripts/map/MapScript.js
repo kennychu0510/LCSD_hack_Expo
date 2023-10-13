@@ -1,6 +1,6 @@
 import { SCRIPT_FUNCTIONS } from '../common';
 
-export const ScrollToFacilitySearch = /* js */ `(function() {
+export const MapScript = /* js */ `(function() {
   ${SCRIPT_FUNCTIONS}
 
   const canvas = document.querySelector('canvas')
