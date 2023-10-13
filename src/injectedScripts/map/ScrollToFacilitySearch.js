@@ -17,6 +17,7 @@ export const ScrollToFacilitySearch = /* js */ `(function() {
           if (popover && !isPopoverOpen) {
               isPopoverOpen = true;
               popover.querySelector('.map-popup__contact').remove()
+              popover.querySelector('.map-popup__actions').remove()
               const buttonContainer = document.createElement('div')
               buttonContainer.style = "display: flex;justify-content: center;"
               
