@@ -64,6 +64,16 @@ const Landing = () => {
     navigation.navigate('Results');
   }
 
+  function onChangeTab(tab: 'facility' | 'venue') {
+    if (tab === 'facility') {
+      setVenueExpanded(false)
+      setFacilityExpanded(state => !state)
+    } else {
+      setFacilityExpanded(false)
+      setVenueExpanded(state => !state)
+    }
+  }
+
   const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
   const tabExpanded = facilityExpanded || venueExpanded;
 
@@ -116,7 +126,7 @@ const Landing = () => {
             </>
           }
           isExpanded={facilityExpanded}
-          onPress={() => setFacilityExpanded((state) => !state)}
+          onPress={() => onChangeTab('facility')}
         />
 
         <ListItem.Accordion
@@ -133,7 +143,7 @@ const Landing = () => {
             </>
           }
           isExpanded={venueExpanded}
-          onPress={() => setVenueExpanded((state) => !state)}
+          onPress={() => onChangeTab('venue')}
         />
 
         {facilityExpanded && (
