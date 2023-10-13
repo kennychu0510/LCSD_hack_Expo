@@ -3,6 +3,7 @@ import { Dimensions, Platform } from 'react-native';
 export const LCSD_URL = {
   ENQUIRY: `https://w1.leisurelink.lcsd.gov.hk/leisurelink/application/checkCode.do?flowId=4&lang=EN`,
   BOOKING: `https://w1.leisurelink.lcsd.gov.hk/leisurelink/application/checkCode.do?flowId=1&lang=EN`,
+  MAP: 'https://www.smartplay.lcsd.gov.hk/website/en/features/facility-booking.html',
 };
 
 export const PATH_NAMES = {

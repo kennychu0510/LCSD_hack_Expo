@@ -158,3 +158,7 @@ export function getUserAgent(): string {
 export function getAllSportsInVenue(value: string): Venue[] {
   return VenueOptions.filter((item) => item.venueValue === value);
 }
+
+export function getVenueValueByName(name: string) {
+  return VenueOptions.find((item) => item.venueName === name)?.venueValue;
+}

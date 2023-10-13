@@ -1,4 +1,4 @@
-import { SearchBar } from '@rneui/themed';
+import { Button, SearchBar } from '@rneui/themed';
 import React, { useMemo, useState } from 'react';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 
@@ -23,10 +23,11 @@ type Props = {
   setFacility: (sport: ISport) => void;
   onReset: () => void;
   selectedVenue: string;
+  clearFacility: () => void
 };
 
 const FacilitySelect = (props: Props) => {
-  const { setFacility, selectedFacility, selectedVenue } = props;
+  const { setFacility, selectedFacility, selectedVenue, clearFacility } = props;
   const [searchValue, setSearchValue] = useState('');
   const sortedSports = sportsWithIcon.filter((sport) => sport.name.includes(searchValue));
 
@@ -59,6 +60,9 @@ const FacilitySelect = (props: Props) => {
           </TouchableOpacity>
         )}
       />
+      <View style={{margin: 20}}>
+        <Button onPress={clearFacility}>Reset</Button>
+      </View>
     </View>
   );
 };

@@ -74,6 +74,10 @@ const Landing = () => {
     }
   }
 
+  function clearFacility() {
+    setSelectedFacility(null)
+  }
+
   const enquiredVenue = getEnquiryOption(selectedFacility, selectedVenue);
   const tabExpanded = facilityExpanded || venueExpanded;
 
@@ -152,10 +156,11 @@ const Landing = () => {
             selectedFacility={selectedFacility}
             onReset={onResetFacilities}
             selectedVenue={selectedVenue}
+            clearFacility={clearFacility}
           />
         )}
         {venueExpanded && (
-          <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} />
+          <VenueSelect setVenue={onSetVenue} venue={selectedVenue} facility={selectedFacility} clearFacility={clearFacility} />
         )}
 
         <View style={{ position: tabExpanded ? 'absolute' : 'relative', flex: 1, zIndex: -1 }}>
