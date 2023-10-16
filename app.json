@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "LCSD Enquirer",
-    "slug": "lcsd_hack",
+    "name": "lcsd-enquirer",
+    "slug": "snack-92c27dc0-3d56-455c-b5f4-32136b774c16",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/sportIcons/lcsd_logo.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -15,23 +15,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "lcsd-enquirer-app"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.lcsd_enquirer"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "2825fda5-a7c7-4fd8-aa72-a2bd333a58ef"
-      }
-    }
+    "description": "LCSD Enquirer is a user-friendly mobile application designed to simplify the process of finding and enquiring about Leisure and Cultural Services Department (LCSD) facilities. "
   }
 }
