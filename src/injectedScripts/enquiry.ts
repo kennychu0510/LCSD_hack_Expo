@@ -17,9 +17,14 @@ export const setDropdown = (options: EnquiryInputOption) => {
             return;
           }
 
+          const optionsJSON = ${optionsJSON};
+          const { sport, facility_type, area, venue, date, venueName } = optionsJSON;
+
           const frame = document.querySelector('frame[name="main"]').contentDocument;
-          const sessionTimePanel = await waitForElm('#sessionTimePanel > select', frame);
           const datePanel = await waitForElm('#DatePanel > select', frame);
+          
+          await setElementValue(datePanel, date);
+          const sessionTimePanel = await waitForElm('#sessionTimePanel > select', frame);
           const facilityPanel = await waitForElm('#facilityPanel > select', frame);
           const facilityTypePanel = await waitForElm('#facilityTypePanel > select', frame);
           const areaPanel = await waitForElm('#areaPanel > select', frame);
@@ -30,14 +35,14 @@ export const setDropdown = (options: EnquiryInputOption) => {
           const enquireButton = await waitForElm('.actionBtnContinue', frame);
           const resultsTable = await waitForElm('#searchResultTable', frame);
           const errorPanel = await waitForElm('#errorPanel', frame);
+
           
           /* 
           facility panel -> facility type panel
           facility type panel -> area panel
           area panel -> preference panel
           */
-          const optionsJSON = ${optionsJSON};
-          const { sport, facility_type, area, venue, date, venueName } = optionsJSON;
+
           for (let session_time of sessionTimePanel.options) {
             if (!session_time.value) continue;
             await setElementValue(datePanel, date);
