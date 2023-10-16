@@ -14,7 +14,8 @@ export const MapScript = /* js */ `(function() {
   function listenForPopup() {
         const observer = new MutationObserver(mutations => {
           const popover = document.querySelector('.popover-body')
-          if (popover && !isPopoverOpen) {
+          const feeChargingFacilitiesSelected = document.querySelector('#facility-type-fee').checked
+          if (popover && !isPopoverOpen && feeChargingFacilitiesSelected) {
               isPopoverOpen = true;
               popover.querySelector('.map-popup__contact').remove()
               popover.querySelector('.map-popup__actions').remove()
