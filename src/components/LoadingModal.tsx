@@ -5,14 +5,6 @@ const Loading = () => {
   return (
     <View style={[styles.loadingScreen, StyleSheet.absoluteFill]}>
       <ActivityIndicator size="large" />
-      {/* {showCancel && (
-        <View style={styles.cancel}>
-          <Button
-            title="Cancel"
-            onPress={onCancel}
-          ></Button>
-        </View>
-      )} */}
     </View>
   );
 };
