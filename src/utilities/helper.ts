@@ -1,5 +1,8 @@
-import VenueOptions from '../../assets/venueOptions.json';
+import moment from 'moment';
+
+import { USER_AGENT } from './constants';
 import { legendHTML } from './legend';
+import VenueOptions from '../../assets/venueOptions.json';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 export type Venue = Unpacked<typeof VenueOptions>;
@@ -17,7 +20,7 @@ export function htmlResultsBuilder(props: { html: string; date: string; details:
   try {
     const parsedDetails = parseEnquiryDetail(details);
     return /* HTML */ `
-      <!DOCTYPE html>
+      <!doctype html>
       <html lang="en">
         <head>
           <meta charset="UTF-8" />
@@ -107,7 +110,7 @@ export function htmlResultsBuilder(props: { html: string; date: string; details:
 
 export function getAllVenues() {
   const venueMap = new Map<string, Venue>();
-  for (let venue of VenueOptions) {
+  for (const venue of VenueOptions) {
     if (venueMap.has(venue.venueName)) {
       continue;
     }
@@ -126,5 +129,36 @@ export function getAllVenues() {
 }
 
 export function getVenueByValue(value: string): Venue | undefined {
-  return VenueOptions.find(item => item.venueValue === value)
+  return VenueOptions.find((item) => item.venueValue === value);
+}
+
+export function getEnquiryOption(facility: ISport | null, venueValue: string): Venue | undefined {
+  if (!facility || !venueValue) return undefined;
+  return VenueOptions.find(
+    (item) => item.sportValue === facility.value && item.venueValue === venueValue
+  );
+}
+
+export function parseEnquiryOptionForInject(option: Venue, date: Date): EnquiryInputOption {
+  return {
+    sport: Number(option.sportValue),
+    facility_type: Number(option.facilityTypeValue),
+    area: option.areaValue,
+    venue: Number(option.venueValue),
+    date: moment(date).format('YYYYMMDD'),
+    venueName: option.venueName,
+  };
+}
+
+export function getUserAgent(): string {
+  const length = USER_AGENT.length;
+  return USER_AGENT[Math.floor(Math.random() * length)];
+}
+
+export function getAllSportsInVenue(value: string): Venue[] {
+  return VenueOptions.filter((item) => item.venueValue === value);
+}
+
+export function getVenueValueByName(name: string) {
+  return VenueOptions.find((item) => item.venueName === name)?.venueValue;
 }

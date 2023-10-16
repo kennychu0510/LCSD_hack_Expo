@@ -1,68 +1,51 @@
-import { Alert, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { Button } from '@rneui/themed';
 import React, { useRef, useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
-import { LCSD_URL } from '../utilities/constants';
-import moment from 'moment';
-import { setDropdown } from '../injectedScripts/enquiry';
-import { Venue, htmlResultsBuilder } from '../utilities/helper';
-import { SCROLL_SLIDER_TO_VIEW } from '../injectedScripts/scrollSliderToView';
-import { Button, ListItem, SearchBar } from '@rneui/themed';
+
 import Loading from './LoadingModal';
+import useEnquiryContext from '../hooks/useEnquiryContext';
+import { setDropdown } from '../injectedScripts/enquiry';
+import { CHECK_CURRENT_URL, INITIAL_SCRIPT } from '../injectedScripts/initialScript';
+import { RootStackParamList } from '../navigator/RootNavigator';
+import { LCSD_URL } from '../utilities/constants';
+import { Venue, getUserAgent, parseEnquiryOptionForInject } from '../utilities/helper';
+import { getSession } from '../utilities/resultParser';
 
 type Props = {
-  venue: Venue[];
+  enquiredVenue: Venue | undefined;
   date: Date;
+  setIsEnquiring: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const EnquiryWebview = (props: Props) => {
-  const { venue, date } = props;
-  const [results, setResults] = useState<string>('');
-  const resultsRecord = useRef<any>({});
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const { setEnquiry } = useEnquiryContext();
+  const { enquiredVenue, date, setIsEnquiring } = props;
   const webviewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(false);
-  const [showResultsModal, setShowResultsModal] = useState(false);
   const [key, setKey] = useState(0);
-
-  function onClear() {
-    setResults('');
-    resultsRecord.current = {};
-  }
-
-  function onViewResults() {
-    setShowResultsModal(true);
-  }
+  const [alertShown, setAlertShown] = useState(false);
 
   function onEnquire() {
-    onClear();
-
+    setIsEnquiring(true);
     const web = webviewRef.current;
 
-    if (!venue) {
-      Alert.alert('Please Select Venue');
+    if (!enquiredVenue) {
+      Alert.alert('Please Select a Venue');
       return;
     }
 
-    if (!date) {
-      Alert.alert('Please Select a Date');
-      return;
-    }
+    setEnquiry({
+      date,
+      timeSlots: [],
+      enquiryTime: new Date(),
+      venue: enquiredVenue,
+    });
 
-    const selectedOptions = venue;
-
-    if (!selectedOptions) {
-      Alert.alert('Invalid Option');
-      return;
-    }
-
-    const parsedOptions: EnquiryInputOption[] = selectedOptions.map((item) => ({
-      sport: Number(item.sportValue),
-      facility_type: Number(item.facilityTypeValue),
-      area: item.areaValue,
-      venue: Number(item.venueValue),
-      date: moment(date).format('YYYYMMDD'),
-      venueName: item.venueName,
-    }));
-
+    const parsedOptions = parseEnquiryOptionForInject(enquiredVenue, date);
     setLoading(true);
     web?.injectJavaScript(setDropdown(parsedOptions));
   }
@@ -72,34 +55,36 @@ const EnquiryWebview = (props: Props) => {
       const data = JSON.parse(event.nativeEvent.data) as Data;
       switch (data.type) {
         case 'debug':
-          // console.log(data.message);
+          console.log(data.message);
           break;
         case 'results':
           const enquiryResults = data.message as any as ResultsFromEnquiry;
-          const { venue, schedule, session } = enquiryResults;
-          console.log(schedule);
-          if (!resultsRecord.current[venue]) {
-            setResults(
-              (results) =>
-                results +
-                `
-              <h1><u>${venue}</u></h1><h2>${session}</h2><div>${schedule}</div>
-            `
-            );
-            resultsRecord.current[venue] = true;
-          } else {
-            setResults(
-              (results) =>
-                results +
-                `
-              <h2>${session}</h2><div>${schedule}</div>
-            `
-            );
+          const { schedule } = enquiryResults;
+          console.log({ schedule });
+          const parsedSession = getSession(schedule);
+          if (parsedSession) {
+            const { timeSlots } = parsedSession;
+            console.log({ timeSlots });
+            setEnquiry((currentEnquiry) => {
+              if (currentEnquiry) {
+                return {
+                  ...currentEnquiry,
+                  timeSlots: [...currentEnquiry.timeSlots, ...timeSlots],
+                };
+              }
+              return {
+                date,
+                enquiryTime: new Date(),
+                timeSlots,
+                venue: enquiredVenue!,
+              };
+            });
           }
           break;
         case 'done':
-          Alert.alert('Booking Details Retrieved', undefined, [{ text: 'See Results', onPress: () => {} }]);
           setLoading(false);
+          setIsEnquiring(false);
+          navigation.navigate('Results');
           break;
 
         case 'error':
@@ -114,43 +99,61 @@ const EnquiryWebview = (props: Props) => {
     }
   }
 
-  function onReload() {}
+  function onReload() {
+    setLoading(false);
+    setKey((key) => key + 1);
+  }
 
   return (
     <>
       <View style={styles.row}>
-        <Button onPress={onReload} color={'warning'}>
+        <Button onPress={onReload} color="warning">
           Reload
         </Button>
         <Button onPress={onEnquire}>Enquire</Button>
       </View>
-      <View style={{flex: 1}}>
-        <WebView ref={webviewRef} style={{ flex: 1 }} source={{ uri: LCSD_URL.ENQUIRY }} onMessage={(event: WebViewMessageEvent) => handleOnMessage(event)} />
-        {showResultsModal && (
-          <Modal visible={showResultsModal} transparent={false} animationType='slide'>
-            <SafeAreaView style={{ flex: 1 }}>
-              <View style={{ alignItems: 'flex-start', margin: 10 }}>
-                <Button title='Close' onPress={() => setShowResultsModal(false)}></Button>
-              </View>
-              <WebView
-                key={key}
-                source={{
-                  html: htmlResultsBuilder({
-                    html: results,
-                    date: moment(date).format('MMM DD YYYY (dddd)'),
-                    details: JSON.stringify(venue[0]),
-                  }),
-                }}
-                injectedJavaScript={SCROLL_SLIDER_TO_VIEW}
-                injectedJavaScriptForMainFrameOnly={true}
-                setSupportMultipleWindows={false}
-                originWhitelist={['*']}
-                javaScriptCanOpenWindowsAutomatically={true}
-                onMessage={(event: WebViewMessageEvent) => handleOnMessage(event)}
-              />
-            </SafeAreaView>
-          </Modal>
-        )}
+      <View style={{ flex: 1 }}>
+        <WebView
+          key={key}
+          ref={webviewRef}
+          style={{ flex: 1 }}
+          source={{ uri: LCSD_URL.ENQUIRY }}
+          onMessage={(event: WebViewMessageEvent) => handleOnMessage(event)}
+          injectedJavaScript={INITIAL_SCRIPT}
+          injectedJavaScriptForMainFrameOnly={false}
+          setSupportMultipleWindows={false}
+          originWhitelist={['*']}
+          javaScriptCanOpenWindowsAutomatically
+          userAgent={getUserAgent()}
+          onNavigationStateChange={(e) => {
+            if (e.url.includes('/retry')) {
+              if (alertShown) return;
+              setAlertShown(true);
+              Alert.alert('Unable to enquiry', 'LCSD is currently unavailable', [
+                {
+                  text: 'Reload',
+                  onPress: onReload,
+                },
+                {
+                  text: 'Ok',
+                },
+              ]);
+            } else if (e.url.includes('/tokenVerifyFailed')) {
+              setAlertShown(true);
+              Alert.alert('Token Verify Failed', 'Please reload and try again', [
+                {
+                  text: 'Reload',
+                  onPress: onReload,
+                },
+                {
+                  text: 'Ok',
+                },
+              ]);
+            } else {
+              webviewRef.current?.injectJavaScript(CHECK_CURRENT_URL);
+            }
+          }}
+        />
         {loading && <Loading />}
       </View>
     </>

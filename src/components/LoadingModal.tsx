@@ -1,23 +1,15 @@
-import { ActivityIndicator, Button, Modal, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 const Loading = () => {
   return (
     <View style={[styles.loadingScreen, StyleSheet.absoluteFill]}>
       <ActivityIndicator size="large" />
-      {/* {showCancel && (
-        <View style={styles.cancel}>
-          <Button
-            title="Cancel"
-            onPress={onCancel}
-          ></Button>
-        </View>
-      )} */}
     </View>
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;
 
 const styles = StyleSheet.create({
   loadingScreen: {
@@ -27,4 +19,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.7)',
   },
-})
+});

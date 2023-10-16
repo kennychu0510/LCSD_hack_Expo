@@ -1,48 +1,69 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
-import { SearchBar } from '@rneui/themed';
 import { Entypo } from '@expo/vector-icons';
-import { SCREEN_HEIGHT } from '../utilities/constants';
-import VenueOptions from '../../assets/venueOptions.json';
+import { Button, SearchBar } from '@rneui/themed';
 import _ from 'lodash';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import VenueOptions from '../../assets/venueOptions.json';
+import LcsdMap from './LcsdMap';
+import { FontAwesome } from '@expo/vector-icons';
 
 type Props = {
-  setVenue: React.Dispatch<React.SetStateAction<string>>;
+  setVenue: (venue: string) => void;
   venue: string;
-  facilities: ISport[];
+  facility: ISport | null;
+  clearFacility: () => void;
 };
 
-const Venues = _.uniqBy(VenueOptions, 'venueValue');
-const SortedVenues = _.sortBy(Venues, ['venueName']);
+const SortedVenues = _.sortBy(VenueOptions, ['venueName']);
 
 const VenueSelect = (props: Props) => {
-  const { setVenue, venue, facilities } = props;
+  const { setVenue, venue, facility, clearFacility } = props;
   const [searchValue, setSearchValue] = useState('');
+  const [showMap, setShowMap] = useState(false);
 
-  const facility = facilities.at(0);
-  const filteredVenues = SortedVenues.filter((item) => item.venueName.includes(searchValue)).filter((venue) => venue.facilityTypeName.includes(facility?.name ?? ''));
+  const filteredVenues = SortedVenues.filter((venue) =>
+    venue.sportValue.includes(facility?.value ?? '')
+  ).filter((item) => item.venueName.includes(searchValue));
+  const uniqueVenues = _.uniqBy(filteredVenues, 'venueValue');
 
-  const [offset, setOffset] = useState(0);
+  function onSetVenueViaMap(venue: string) {
+    setVenue(venue);
+    clearFacility();
+  }
 
   return (
-    <>
-      <SearchBar value={searchValue} onChangeText={setSearchValue} platform='ios' containerStyle={{ paddingHorizontal: 10 }} placeholder='Venue' />
+    <View style={{ flex: 1 }}>
+      <SearchBar
+        value={searchValue}
+        onChangeText={setSearchValue}
+        platform="ios"
+        containerStyle={{ paddingHorizontal: 10 }}
+        placeholder="Venue"
+      />
       <FlatList
-        onLayout={(e) => {
-          setOffset(e.nativeEvent.layout.y);
-          console.log(e.nativeEvent.layout.y)
-        }}
-        style={{ height: SCREEN_HEIGHT - offset - 75 }}
-        contentContainerStyle={{ paddingBottom: offset + 75 + 10 }}
-        data={filteredVenues}
+        data={uniqueVenues}
         renderItem={({ item, index }) => (
           <TouchableOpacity style={styles.venueContainer} onPress={() => setVenue(item.venueValue)}>
-            <Text style={[styles.venueName, venue === item.venueValue && { color: 'green' }]}>{item.venueName}</Text>
-            {venue === item.venueValue && <Entypo name='check' size={24} color='green' />}
+            <Text style={[styles.venueName, venue === item.venueValue && { color: 'green' }]}>
+              {item.venueName}
+            </Text>
+            {venue === item.venueValue && <Entypo name="check" size={24} color="green" />}
           </TouchableOpacity>
         )}
       />
-    </>
+      <View style={{ margin: 20 }}>
+        <Button
+          iconRight
+          icon={
+            <FontAwesome style={{ marginHorizontal: 20 }} name="map-o" size={24} color="white" />
+          }
+          onPress={() => setShowMap(true)}>
+          Find on Map
+        </Button>
+      </View>
+      {showMap && <LcsdMap onClose={() => setShowMap(false)} setVenue={onSetVenueViaMap} />}
+    </View>
   );
 };
 
@@ -59,4 +80,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     flexShrink: 1,
   },
+  tabContainer: {},
 });

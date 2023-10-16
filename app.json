@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "lcsd_hack",
+    "name": "LCSD Enquirer",
     "slug": "lcsd_hack",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/sportIcons/lcsd_logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -16,21 +16,21 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lcsd-hack"
+      "bundleIdentifier": "lcsd-enquirer-app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.kennychu0510.lcsd_hack"
+      "package": "com.lcsd_enquirer"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "b4a5a1da-a823-4725-93d6-3ff08d935ba0"
+        "projectId": "2825fda5-a7c7-4fd8-aa72-a2bd333a58ef"
       }
     }
   }

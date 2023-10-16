@@ -24,5 +24,8 @@ export default {
   TennisCourt: require('./TennisCourt.png'),
   VolleyballCourt: require('./VolleyballCourt.png'),
   WindSurfing: require('./WindSurfing.png'),
-  lcsd_logo: require('./lcsd_logo.png')
+  lcsd_logo: require('./lcsd_logo.png'),
+  RugbyPitch: require('./rugby.png'),
+  SportClimbingFacilities: require('./climbing.png'),
+  Windsurfing: require('./WindSurfing.png')
 };

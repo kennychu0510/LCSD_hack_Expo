@@ -77,6 +77,8 @@ PODS:
     - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
+  - EXScreenCapture (5.3.0):
+    - ExpoModulesCore
   - EXSplashScreen (0.20.5):
     - ExpoModulesCore
     - RCT-Folly (= 2021.07.22.00)
@@ -514,6 +516,8 @@ PODS:
     - React-jsi (= 0.72.5)
     - React-logger (= 0.72.5)
     - React-perflogger (= 0.72.5)
+  - RNCAsyncStorage (1.18.2):
+    - React-Core
   - RNDateTimePicker (7.2.0):
     - React-Core
   - RNGestureHandler (2.12.1):
@@ -571,6 +575,7 @@ DEPENDENCIES:
   - expo-dev-menu-interface (from `../node_modules/expo-dev-menu-interface/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
+  - EXScreenCapture (from `../node_modules/expo-screen-capture/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - EXUpdatesInterface (from `../node_modules/expo-updates-interface/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -613,6 +618,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -657,6 +663,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
+  EXScreenCapture:
+    :path: "../node_modules/expo-screen-capture/ios"
   EXSplashScreen:
     :path: "../node_modules/expo-splash-screen/ios"
   EXUpdatesInterface:
@@ -738,6 +746,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
@@ -767,6 +777,7 @@ SPEC CHECKSUMS:
   expo-dev-menu-interface: bda969497e73dadc2663c479e0fa726ca79a306e
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoModulesCore: 51cb2e7ab4c8da14be3f40b66d54c1781002e99d
+  EXScreenCapture: 81002ba5fb40a367fba9047d223068abb558594d
   EXSplashScreen: c0e7f2d4a640f3b875808ed0b88575538daf6d82
   EXUpdatesInterface: 82ed48d417cdcd376c12ca1c2ce390d35500bed6
   FBLazyVector: 71803c074f6325f10b5ec891c443b6bbabef0ca7
@@ -809,6 +820,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: cc32add98c45c5df18436a6a52a7e1f6edec102c
   React-utils: 7a9918a1ffdd39aba67835d42386f592ea3f8e76
   ReactCommon: 91ece8350ebb3dd2be9cef662abd78b6948233c0
+  RNCAsyncStorage: ddc4ee162bfd41b0d2c68bf2d95acd81dd7f1f93
   RNDateTimePicker: 3942382593f104af226ad9c56e16166960c7ae30
   RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
   RNReanimated: 9f7068e43b9358a46a688d94a5a3adb258139457
@@ -817,6 +829,6 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 86fed2e4d425ee4c6eab3813ba1791101ee153c6
 
-PODFILE CHECKSUM: 4b518042a6d5dbb54a88cb0aef9d38a4c6a5350b
+PODFILE CHECKSUM: 660f64d23a9b39612e42956c41380973a827f6e8
 
 COCOAPODS: 1.12.1

@@ -3,19 +3,19 @@
     "version": ">= 3.13.2"
   },
   "build": {
-    "development-simulator": {
-      "developmentClient": true,
+    "development": {
       "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
       "ios": {
-        "simulator": true
+        "buildConfiguration": "Debug"
       }
     },
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
     "preview": {
-      "distribution": "internal"
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {}
   },
