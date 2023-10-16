@@ -1,10 +1,8 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity, Image, TouchableWithoutFeedback } from 'react-native';
-import React from 'react';
 import moment, { Moment } from 'moment';
-import { SCREEN_WIDTH, DATE_FORMAT } from '../utilities/constants';
-import Images from '../assets/index'
-import { getToday } from '../utilities/helper'
-import Tick from './Tick'
+import React from 'react';
+import { Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { DATE_FORMAT, SCREEN_WIDTH } from '../utilities/constants';
+import Tick from './Tick';
 
 function getAvailableDates() {
   let start = 0
@@ -13,7 +11,7 @@ function getAvailableDates() {
    }
   const dates: Moment[] = [];
   for (let i = 0; i < 7; i++) {
-    dates.push(moment().add('d', i));
+    dates.push(moment().add(7, 'd'));
   }
   return dates;
 }
@@ -22,7 +20,7 @@ const availableDates = getAvailableDates();
 
 type Props = {
   selectedDate: string;
-  setSelectedDate: (date: string) => void;
+  setSelectedDate: (date: Moment) => void;
   closeModal: () => void
 };
 
